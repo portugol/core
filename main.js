@@ -19,12 +19,12 @@ g1.add(new End());
 
 console.log(g1.toString());
 
-g1.execute();
+//g1.execute();
 
 console.log("VALIDATE:");
 console.log(g1.validate());
-*/
 
+*/
 
 
 var static_server = ecstatic(__dirname + '/client');
@@ -36,3 +36,4 @@ http_server.listen(8080, function(){
 
 var comm_server = new Server(http_server);
 comm_server.start();
+
