@@ -1,0 +1,35 @@
+<html>
+<head>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+  <script src="client.js"></script>
+  <style>
+    #draggable { width: 50px; height: 50px; padding: 0.5em; background: red;}
+  </style>
+</head>
+<body>
+  <textarea id="jsontext" rows="10" cols="50">
+    {
+       "root":{
+          "next":{
+             "next":{
+                "data":"fim",
+                "type":2
+             },
+             "data":"Ola mundo",
+             "type":3
+          },
+          "data":"inicio",
+          "type":1
+       },
+       "last":{
+          "data":"fim",
+          "type":2
+       }
+    }
+  </textarea>
+  <a href="#" id="dang">Send</a>
+</body>
+</html>

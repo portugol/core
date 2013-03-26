@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "dependencies": {
     "prompt": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "ecstatic": "*"
   }
 }
