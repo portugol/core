@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Mocha Testes</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="mocha.css" />
+    <script></script>
+    <script src="mocha.js"></script>
+    <script src="chai.js"></script> <!-- added chai.js instead of assert -->
+    <script>mocha.setup('bdd')</script>
+    <script>
+      function assert(expr, msg) {
+        if (!expr) throw new Error(msg || 'failed');
+      }
+
+      function erro(exp, msg){  
+        if (!expr) throw new Error(msg || 'failed');
+      }
+    </script>
+    <script src="testes_parser_browser.js"></script>
+    <script>
+      onload = function(){
+        mocha.run();
+      };
+    </script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>
