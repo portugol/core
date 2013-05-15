@@ -1,0 +1,20 @@
+module.exports ={
+	INTEGER:   0,
+	REAL:      1,
+	CHAR:      2,
+	STRING:    3,
+	BOOLEAN:   4,
+	NULL:      5,
+	MATHFUNC:  6,
+	CONST:     7,
+	UNARYOP:   8,
+	BINARYOP:  9,
+	VAR:       10,
+	FUNC:      11,
+	PARENT:    12,
+	RESERVED:  13,
+	COMMA:     14,
+	ARGUMENT:  15,
+	PARAMETER: 16,
+	ASSIGN:    17
+};
