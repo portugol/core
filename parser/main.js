@@ -3,6 +3,7 @@ var Token = require('./token');
 var types= require('./definitions/token_types');
 var comp=require('./compatibility/compatibility');
 var operandCodes=require('./compatibility/vartype_codes');
+var Evaluator = require('./evaluator');
 
 //p.parse("2*(1+sin(0+0))/3"); OK 
 //p.parse("a&&b||c&&d"); OK
@@ -29,8 +30,10 @@ var operandCodes=require('./compatibility/vartype_codes');
 
 try{
 	var p = new Expression();
-	var expr="a=2+func(2)";
-	p.toPostfix(expr);
+	var expr="1+2";
+	var stack = p.toPostfix(expr);
+	var e = new Evaluator();
+	console.log(e.evaluate(stack));
 }
 catch(err){
 	console.log(err.message);

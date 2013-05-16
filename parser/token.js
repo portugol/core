@@ -24,9 +24,9 @@ Token.prototype.toString = function () {
   switch (this.type_) {
   case types.REAL:
   case types.INTEGER:
-    return "{" + this.number_ + "}";
+    return this.number_;
   case types.NULL:
-    return "{NULL}";
+    return "NULL";
   case types.MATHFUNC:
   case types.UNARYOP:
   case types.BINARYOP:
@@ -39,9 +39,9 @@ Token.prototype.toString = function () {
   case types.ARGUMENT:
   case types.PARAMETER:
   case types.ASSIGN:
-    return "{" + this.value_ + "}";
+    return this.value_;
   case types.COMMA:
-    return "{,}";
+    return ",";
   default:
     return "Invalid Token";
   }

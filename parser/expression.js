@@ -500,7 +500,7 @@
 	};
 
 	Expression.prototype.throwError = function(column, msg){
-		if(msg==undefined && column!=undefined){
+		if(msg===undefined && column!=undefined){
 			this.errormsg = "parse error: "+ column;
 			throw new Error(this.errormsg);
 		}

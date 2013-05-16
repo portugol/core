@@ -321,7 +321,6 @@ module.exports.compatibility = {
 		if(finalType===undefined){
 			throw Error("As variaveis nao sao compativeis");
 		}
-
 		//devolve o tipo de variável resultante
 		return finalType;
 	}

@@ -1,11 +1,17 @@
 var Parser= require('./expression'),
 	tokenTypes=require('./definitions/token_types'),
 	vartypeCodes=require('./compatibility/vartype_codes'),
-	comp=require('./compatibility/compatibility');
+	comp=require('./compatibility/compatibility').compatibility;
 
 var Evaluator = function(){
-
+	this.opFunc = {
+		"+": add,
+		"-": sub,
+		"*": mul,
+		"/": div
+	};
 };
+
 
 //guardar códigos binários dos tipos de variável
 var INTEGER = vartypeCodes.INTEGER;
@@ -25,6 +31,7 @@ typeToCode[tokenTypes.STRING]=STRING;
 typeToCode[tokenTypes.CHAR]=CHAR;
 typeToCode[tokenTypes.BOOLEAN]=BOOLEAN;
 
+
 //Converte o código do tokenType em código binário do tipo de variável
 Evaluator.prototype.tokenTypeToVarType = function(tokenType){
 	return typeToCode[tokenType];
@@ -33,45 +40,60 @@ Evaluator.prototype.tokenTypeToVarType = function(tokenType){
 Evaluator.prototype.evaluate = function(postfixstack){
 	this.tempstack=[];
 	this.postfixstack=postfixstack;
-	var item;
-	while(postfixstack.length>0){
-		item=postfixstack.pop();
-		//carregar operaandos para a pilha
-		while(item.type_!=tokenTypes.BINARYOP && item.type_!=tokenTypes.UNARYOP && this.postfixstack.length>0){
-			this.tempstack.push(item);
-			item=postfixstack.pop();
-		}
-		if(item.type_==tokenTypes.BINARYOP){
-			var token1=tempstack.pop();
-			var token2=tempstack.pop();
-			if(this.checkCompatibility(token1,item,token2)){
+	this.item={};
 
+	while(this.postfixstack.length>0){
+		//o shift remove o primeiro elemento da pilha
+		this.item=this.postfixstack.shift();
+		//carregar operandos para a pilha
+		while((this.item.type_!=tokenTypes.BINARYOP) && (this.item.type_!=tokenTypes.UNARYOP) && (this.postfixstack.length>0)){
+			//o unshift adiciona elementos no inicio da pilha
+			//passa o token para a pilha temporaria
+			this.tempstack.unshift(this.item);
+			//retira um novo item da stack pos fixa
+			this.item=this.postfixstack.shift();
+		}
+		//se o token for um operador binario
+		if(this.item.type_==tokenTypes.BINARYOP){
+			var token1=this.tempstack.shift();
+			var token2=this.tempstack.shift();
+			if(token1===undefined || token2===undefined){
+				this.throwError("Erro de paridade");
+			}
+			if(this.checkCompatibility(token1,this.item,token2)){
+				//guarda o tipo de dados final
+				var dataType=this.getFinalType(token1,token2);
+				//guarda a função javascript correspondente ao operador
+				var func=this.opFunc[this.item.value_];
+				if(func===undefined){
+					this.throwError("A funcao referente ao simbolo operatorio nao esta definida");
+				}
+				this.tempstack.unshift(func(token1.value_,token2.value_));
+				console.log(this.tempstack);
 			}
 			else{
-				//EXCEPTION
+				this.throwError("Tipos de dados incompativeis");
 			}
 
 		}
-		else if(item.type_==tokenTypes.UNARYOP){
+		else if(this.item.type_==tokenTypes.UNARYOP){
 
 		}
 	}
 };
 
-Evaluator.prototype.checkCompatibility = function(token1, operatorSymbol, token2){
-	return comp.checkCompatibility(token.type_, operatorSymbol, token2.type_);
+Evaluator.prototype.checkCompatibility = function(token1, operator, token2){
+	return comp.checkCompatibility(token1.type_, operator.value_, token2.type_);
 };
 
 Evaluator.prototype.getFinalType = function(token1, token2){
-
+	var type1 = this.tokenTypeToVarType(token1.type_);
+	var type2 = this.tokenTypeToVarType(token2.type_);
+	return comp.getFinalType(type1, type2);
 };
 
-
-this.opFunc = {
-	"+": add,
-	"-": sub,
-	"*": mul,
-	"/": div
+Evaluator.prototype.throwError = function(msg){
+	throw new Error("EVALUATOR ERROR:" + msg);
 };
 
 function add(a, b) {
