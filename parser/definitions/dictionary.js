@@ -9,7 +9,7 @@ module.exports = [
 	{
 		'id': 2,
 		'symbol': 'FALSE',
-		'name': "true",
+		'name': "false",
 		'type': 'value',
 		'subtype': 'boolean'
 	},

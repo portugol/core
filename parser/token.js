@@ -3,12 +3,10 @@ var sys = require('sys'),
   types = require('./definitions/token_types'),
   util  = require('util');
 
-var Token = function (type_, value_, prio_, number_, parameterStack) {
+var Token = function (type_, value_, prio_, parameterStack) {
   this.type_ = type_;
-  this.value_ = value_ || 0;
-  this.prio_ = prio_ || 0;
-  //faz parse float do value se o token for do tipo NUMBER
-  this.number_ = (this.type_ === types.REAL || this.type_ === types.INTEGER) ? parseFloat(this.value_) : number_;
+  this.value_ = value_;
+  this.prio_ = prio_;
   this.parameterStack = parameterStack;
 };
 
@@ -22,11 +20,10 @@ Token.prototype.setType = function (type) {
 
 Token.prototype.toString = function () {
   switch (this.type_) {
-  case types.REAL:
-  case types.INTEGER:
-    return this.number_;
   case types.NULL:
     return "NULL";
+  case types.REAL:
+  case types.INTEGER:
   case types.MATHFUNC:
   case types.UNARYOP:
   case types.BINARYOP:

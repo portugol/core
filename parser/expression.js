@@ -3,7 +3,8 @@
 		prio= require('./definitions/priorities'),
 		tokenTypes= require('./definitions/token_types'),
 		Token=require('./token'),
-		util = require('util');
+		util = require('util'),
+		Debug = require('./debug/debug'); 
 
 	var LPAREN       = 1 << 1;
 	var RPAREN       = 1 << 2;
@@ -21,91 +22,9 @@
 	var VAR          = 1 << 14;
 	var PRIMARY      = (NUMBER | TEXT | BOOLEAN);
 
-	var Expression = function(isArgument){
+	var Expression = function(isArgument, isDebug){
 		this.argumentExpected = isArgument || false;
-	};
-
-	Expression.prototype.printStack = function(stack){
-		var item;
-		var str="";
-		var type="";
-		var status="NOT OK";
-		console.log("\n");
-
-		for(var i=stack.length-1; i>=0; i--){
-			item=stack[i];
-			switch (item.type_) {
-				case tokenTypes.ARGUMENT:
-					type="ARGUMENT";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.ASSIGN:
-					type="ASSIGN";
-					if(item.prio_==prio.ASSIGN) status="prio OK";
-					break;
-				case tokenTypes.CHAR:
-					type="CHAR";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.INTEGER:
-					type="INTEGER";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.REAL:
-					type="REAL";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.NULL:
-					type="NULL";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.MATHFUNC:
-					type="MATHFUNC";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.UNARYOP:
-					type="UNARYOP";
-					if(item.prio_==prio.UNARY) status="prio OK";
-					break;
-				case tokenTypes.BINARYOP:
-					type="BINARYOP";
-					status="---";
-					break;
-				case tokenTypes.VAR:
-					type="VAR";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.RESERVED:
-					type="RESERVED";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.FUNC:
-					type="FUNC";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.COMMA:
-					type="COMMA";
-					if(item.prio_==prio.COMMA) status="prio OK";
-					break;
-				case tokenTypes.CONST:
-					type="CONST";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.STRING:
-					type="STRING";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				case tokenTypes.BOOLEAN:
-					type="BOOLEAN";
-					if(item.prio_==prio.VALUE) status="prio OK";
-					break;
-				default:
-					return "Invalid Token";
-			}
-			str=i+": {"+item.value_+"}\t"+"type: "+type+"\t"+"prio: "+item.prio_+" status: "+status;
-			status="NOT OK";
-			console.log(str);
-		}
+		this.isDebug = isDebug || false;
 	};
 
 	if (!Array.indexOf) {
@@ -135,7 +54,7 @@
 		this.tmpstr="";
 		var expected=(PRIMARY | VAR | LPAREN | SIGNAL | NOT | BITWISE_NOT);
 		this.numOperands=0;
-		this.operstack = [];
+		this.operStack = [];
 		this.postfixStack=[];
 		this.parameterStack=[];
 
@@ -162,7 +81,7 @@
 					console.log("ERRO: Nao e esperado um operador UNARY");
 					break;
 				}
-				this.addOperator(postfixStack, operstack, tokenTypes.OPERATOR);
+				this.addOperator(postfixStack, operStack, tokenTypes.OPERATOR);
 				expected=(PRIMARY | LPAREN | FUNCTION);
 			}*/
 			if(this.isBitwiseNot()){
@@ -170,15 +89,15 @@
 					this.throwError(this.pos, "Nao e esperado um operador BITWISE NOT (~)");
 					//throw new Error("Nao e esperado um operador NOT");
 				}
-				this.addOperator(tokenTypes.UNARYOP);
+				this.addOperator(tokenTypes.UNARY_LEFT_OP);
 				expected=(NUMBER| LPAREN | VAR);
 			}
-			if(this.isNot()){
+			else if(this.isNot()){
 				if((expected & NOT) === 0){
 					this.throwError(this.pos, "Nao e esperado um operador NOT");
 					//throw new Error("Nao e esperado um operador NOT");
 				}
-				this.addOperator(tokenTypes.UNARYOP);
+				this.addOperator(tokenTypes.UNARY_LEFT_OP);
 				expected=(BOOLEAN | LPAREN | VAR);
 			}
 			else if(this.isArithmeticOp()){
@@ -228,7 +147,7 @@
 						if(previous=="-"){
 							this.tokensymbol=previous;
 							this.tokenprio=prio.UNARY;
-							this.addOperator(tokenTypes.UNARYOP);
+							this.addOperator(tokenTypes.UNARY_LEFT_OP);
 						}
 						expected=(NUMBER | LPAREN |VAR | BITWISE_NOT);
 					}
@@ -245,7 +164,7 @@
 				if((expected & LOGICOP)===0){
 					this.throwError(this.pos, "Nao e esperado um operador logico");
 				}
-				this.addOperator(tokenTypes.BINARYOP);
+				this.addOperator(tokenTypes.BINARY_LOGIC_OP);
 				expected=(BOOLEAN | LPAREN | VAR | NOT);
 			}
 			else if(this.isNumber()){
@@ -451,18 +370,24 @@
 		} //FIM DO WHILE
 		//descarrega os operadores restantes para a pilha pos fixa
 		this.popAll();
-		console.log("\n############################################################");
-		console.log("numero de operandos: "+this.numOperands);
-		console.log("numero de tokens:"+this.postfixStack.length);
 
+		if(this.isDebug){
+			console.log("numero de operandos: "+this.numOperands);
+			console.log("numero de tokens:"+this.postfixStack.length);
+		}
 		if((this.numOperands+1!=this.postfixStack.length) && this.postfixStack.length>0){
 			this.throwError(this.pos, "Faltam operandos na expressão");
 			//throw new Error("Faltam operandos na expressão");
 		}
 		
-		console.log("postfixStack:"+this.postfixStack);
-		this.printStack(this.postfixStack);
-		console.log("\noperstack:"+this.operstack);
+		if(this.isDebug){
+			var dbg = new Debug();
+			console.log("POSTFIXTACK:");
+			dbg.printStack(this.postfixStack);
+			console.log("OPERATOR STACK:");
+			dbg.printStack(this.operStack);
+		}
+
 
 		return this.postfixStack;
 	};
@@ -489,8 +414,8 @@
 
 	Expression.prototype.popAll = function(){
 		var aux;
-		while(this.operstack.length>0){
-			aux=this.operstack.pop();
+		while(this.operStack.length>0){
+			aux=this.operStack.pop();
 			if(aux.value_=="("){
 				this.throwError(this.pos, "Parentesis sem correspondencia");
 				//throw new Error("Parentesis sem correspondencia");
@@ -510,10 +435,10 @@
 
 	//adiciona um novo token à pilha de operadores
 	Expression.prototype.addOperator = function(type_){
-		if(type_===tokenTypes.BINARYOP){
+		if(type_===tokenTypes.BINARYOP || type_===tokenTypes.BINARY_LOGIC_OP){
 			this.numOperands+=2; //são esperados 2 operandos
 		}
-		if(type_===tokenTypes.UNARYOP){
+		if(type_===tokenTypes.UNARY_LEFT_OP || type_===tokenTypes.UNARY_RIGHT_OP){
 			this.numOperands++; //é esperado 1 operando
 		}
 		if(type_===tokenTypes.FUNC){
@@ -531,19 +456,21 @@
 
 		var operator = new Token(type_, this.tokensymbol, this.tokenprio);
 		var tmp;
-		console.log(this.tokensymbol);
+		if(this.isDebug){
+			console.log(this.tokensymbol);
+		}
 		//se for parentesis esquerdo carrega para a pilha
 		if(this.tokensymbol=="("){
-			this.operstack.push(operator);
+			this.operStack.push(operator);
 		}
 		//se for parentesis direito
 		else if(this.tokensymbol==")"){
-			if(this.operstack.length>0){
-				tmp = this.operstack.pop();
+			if(this.operStack.length>0){
+				tmp = this.operStack.pop();
 				while(tmp.value_ != ("(")){
-					if(this.operstack.length>0){
+					if(this.operStack.length>0){
 						this.postfixStack.push(tmp);
-						tmp=this.operstack.pop();
+						tmp=this.operStack.pop();
 					}
 					else{
 						this.throwError(this.pos, "Parentesis a mais");
@@ -554,30 +481,34 @@
 			else{
 				this.throwError(this.pos, "Parentesis a mais");
 			}
-			
 		}
 		else{
-			//enquanto a pilha dos operadores não estiver vazia
-			//remove os operadores mais prioritários para a stack pos fixa
-			while (this.operstack.length > 0) {
-				//verificar se o novo operador é menos prioritario
-				if (this.isntPrio(operator.prio_)) {
-					this.postfixStack.push(this.operstack.pop());
+			/*Se já existem tokens na pilha de operadores verifica se o novo operador
+			é prioritário. Se for prioritário é adicionado à stack, caso contrário
+			o operador anterior passa da stack de operadores para a stack pós fixa
+			e depois o novo operador é passado para a stack de operadores.*/
+			if(this.operStack.length>0){
+				if(this.isntPrio(operator.prio_)){
+					this.postfixStack.push(this.operStack.pop());
+					this.operStack.push(operator);
 				}
-				else {
-					break;
+				else{
+					this.operStack.push(operator);
 				}
 			}
-			this.operstack.push(operator);
+			else{
+				this.operStack.push(operator);
+			}
 		}
 	};
 
 	//Compara a prioridade recebida por parâmetro com o topo da pilha de operadores
 	Expression.prototype.isntPrio = function(prio){
-		var lasttoken = this.operstack[this.operstack.length-1];
+		//faz peek (copia valor sem retirar da pilha)
+		var lasttoken = this.operStack[this.operStack.length-1];
 		//só compara prioridade se o topo da pilha de operadores não tiver um par. esq.
 		if(lasttoken.symbol!="("){
-			if(prio>=this.operstack[this.operstack.length-1].prio_){
+			if(prio>=this.operStack[this.operStack.length-1].prio_){
 				return true;
 			}
 		}
@@ -596,12 +527,35 @@
 
 	Expression.prototype.addOperand = function(type_){
 		var operand;
+		var value;
 		if(type_==tokenTypes.ARGUMENT){
-			operand = new Token(type_, this.tokensymbol, this.tokenprio, undefined, this.parameterStack);
+			operand = new Token(type_, this.tokensymbol, this.tokenprio, this.parameterStack);
+		}
+		else if(type_==tokenTypes.INTEGER){
+			//conversão para inteiro
+			value=parseInt(this.tokensymbol);
+		}
+		else if(type_==tokenTypes.REAL){
+			//conversão para real
+			value=parseFloat(this.tokensymbol);
+		}
+		else if(type_==tokenTypes.BOOLEAN){
+			var keyword;
+			for(var i=0; i<definitions.length; i++){
+				if(definitions[i].symbol==this.tokensymbol){
+					if(definitions[i].name=="true"){
+						value=true;
+					}
+					else{
+						value=false;
+					}
+				}
+			}
 		}
 		else{
-			operand = new Token(type_, this.tokensymbol, this.tokenprio);
+			value=this.tokensymbol;
 		}
+		operand = new Token(type_, value, this.tokenprio);
 		this.postfixStack.push(operand);
 	};
 
@@ -723,11 +677,11 @@
 		else if(code==="<"){
 			this.tokenprio=prio.COMP1;
 			this.tokensymbol=code;
-			this.tokentype=tokenTypes.BINARYOP;
+			this.tokentype=tokenTypes.BINARY_LOGIC_OP;
 			if(code2==="="){
 				this.pos++;
 				this.tokensymbol="<=";
-				this.tokentype=tokenTypes.BINARYOP;
+				this.tokentype=tokenTypes.BINARY_LOGIC_OP;
 			}
 			if(code2==="<"){
 				this.pos++;
@@ -739,11 +693,11 @@
 		else if(code===">"){
 			this.tokenprio=prio.COMP1;
 			this.tokensymbol=code;
-			this.tokentype=tokenTypes.BINARYOP;
+			this.tokentype=tokenTypes.BINARY_LOGIC_OP;
 			if(code2==="="){
 				this.pos++;
 				this.tokensymbol=">=";
-				this.tokentype=tokenTypes.BINARYOP;
+				this.tokentype=tokenTypes.BINARY_LOGIC_OP;
 			}
 			if(code2===">"){
 				this.pos++;
@@ -756,7 +710,7 @@
 				this.pos++;
 				this.tokensymbol="==";
 				this.tokenprio=prio.COMP2;
-				this.tokentype=tokenTypes.BINARYOP;
+				this.tokentype=tokenTypes.BINARY_LOGIC_OP;
 		}
 		else if(code==="&" && code2!="&"){
 			this.tokensymbol="&";
@@ -776,7 +730,7 @@
 		else if(code==="~"){
 			this.tokensymbol=code;
 			this.tokenprio=prio.UNARY;
-			this.tokentype=tokenTypes.UNARYOP;
+			this.tokentype=tokenTypes.UNARY_LEFT_OP;
 		}
 		else{
 			return false;
@@ -900,7 +854,9 @@
 			aux=this.pos;
 			while (this.pos < this.expr.length) {
 				var code = this.expr.charAt(this.pos);
-				console.log(code);
+				if(this.isDebug){
+					console.log(code);
+				}
 				if (code != '"') {
 					str += this.expr.charAt(this.pos);
 					this.pos++;
@@ -931,7 +887,9 @@
 			aux=this.pos;
 			while (this.pos < this.expr.length) {
 				var code = this.expr.charAt(this.pos);
-				console.log(code);
+				if(this.isDebug){
+					console.log(code);
+				}
 				if (code != "'") {
 					str += this.expr.charAt(this.pos);
 					this.pos++;

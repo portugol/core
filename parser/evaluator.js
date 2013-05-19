@@ -1,15 +1,14 @@
 var Parser= require('./expression'),
 	tokenTypes=require('./definitions/token_types'),
 	vartypeCodes=require('./compatibility/vartype_codes'),
-	comp=require('./compatibility/compatibility').compatibility;
+	comp=require('./compatibility/binary_comp').binComp,
+	binLogicOps=require('./definitions/binary_logical_operators').logicalOps,
+	binOps=require('./definitions/binary_operators').binaryOps,
+	leftUnaryOps=require('./definitions/left_unary_operators').leftUnaryOps,
+	Debug = require('./debug/debug'); 
+
 
 var Evaluator = function(){
-	this.opFunc = {
-		"+": add,
-		"-": sub,
-		"*": mul,
-		"/": div
-	};
 };
 
 
@@ -41,45 +40,87 @@ Evaluator.prototype.evaluate = function(postfixstack){
 	this.tempstack=[];
 	this.postfixstack=postfixstack;
 	this.item={};
+	this.resultToken={};
+	this.token1={};
+	this.token2={};
 
 	while(this.postfixstack.length>0){
 		//o shift remove o primeiro elemento da pilha
 		this.item=this.postfixstack.shift();
 		//carregar operandos para a pilha
-		while((this.item.type_!=tokenTypes.BINARYOP) && (this.item.type_!=tokenTypes.UNARYOP) && (this.postfixstack.length>0)){
+		while(this.isntOperator() && (this.postfixstack.length>0)){
 			//o unshift adiciona elementos no inicio da pilha
 			//passa o token para a pilha temporaria
-			this.tempstack.unshift(this.item);
+			this.tempstack.push(this.item);
 			//retira um novo item da stack pos fixa
 			this.item=this.postfixstack.shift();
 		}
 		//se o token for um operador binario
 		if(this.item.type_==tokenTypes.BINARYOP){
-			var token1=this.tempstack.shift();
-			var token2=this.tempstack.shift();
-			if(token1===undefined || token2===undefined){
+			this.token2=this.tempstack.pop();
+			this.token1=this.tempstack.pop();
+
+			if(this.token1===undefined || this.token2===undefined){
 				this.throwError("Erro de paridade");
 			}
-			if(this.checkCompatibility(token1,this.item,token2)){
-				//guarda o tipo de dados final
-				var dataType=this.getFinalType(token1,token2);
-				//guarda a função javascript correspondente ao operador
-				var func=this.opFunc[this.item.value_];
-				if(func===undefined){
-					this.throwError("A funcao referente ao simbolo operatorio nao esta definida");
-				}
-				this.tempstack.unshift(func(token1.value_,token2.value_));
-				console.log(this.tempstack);
+			try{
+				this.resultToken=binOps.calculate(this.token1, this.token2, this.item);
 			}
-			else{
-				this.throwError("Tipos de dados incompativeis");
+			catch(err){
+				this.throwError(err);
 			}
-
+			this.tempstack.push(this.resultToken);
+			//console.log(this.tempstack);
 		}
-		else if(this.item.type_==tokenTypes.UNARYOP){
-
+		else if(this.item.type_==tokenTypes.UNARY_LEFT_OP){
+			this.token1=this.tempstack.shift();
+			if(this.token1===undefined){
+				this.throwError("Erro de paridade");
+			}
+			try{
+				this.resultToken=leftUnaryOps.calculate(this.token1, this.item);
+			}
+			catch(err){
+				this.throwError(err);
+			}
+			this.tempstack.push(this.resultToken);
+		}
+		else if(this.item.type_==tokenTypes.BINARY_LOGIC_OP){
+			this.token2=this.tempstack.shift();
+			this.token1=this.tempstack.shift();
+			
+			if(this.token1===undefined || this.token2===undefined){
+				this.throwError("Erro de paridade");
+			}
+			try{
+				this.resultToken=binLogicOps.calculate(this.token1, this.token2, this.item);
+			}
+			catch(err){
+				this.throwError(err);
+			}
+			this.tempstack.push(this.resultToken);
 		}
 	}
+	if(this.resultToken.type_==tokenTypes.INTEGER){
+		return parseInt(this.resultToken.value_);
+	}
+	if(this.resultToken.type_==tokenTypes.REAL){
+		return parseFloat(this.resultToken.value_);
+	}
+	if(this.resultToken.type_==tokenTypes.CHAR){
+		return this.resultToken.value_;
+	}
+	if(this.resultToken.type_==tokenTypes.STRING){
+		return this.resultToken.value_;
+	}
+	if(this.resultToken.type_==tokenTypes.BOOLEAN){
+		return this.resultToken.value_;
+	}
+};
+
+Evaluator.prototype.isntOperator= function(){
+	var t=this.item.type_;
+	return (t!=tokenTypes.BINARYOP) && (t!=tokenTypes.UNARY_LEFT_OP) &&  (t!=tokenTypes.UNARY_RIGHT_OP) &&(t!=tokenTypes.BINARY_LOGIC_OP);
 };
 
 Evaluator.prototype.checkCompatibility = function(token1, operator, token2){
@@ -95,24 +136,5 @@ Evaluator.prototype.getFinalType = function(token1, token2){
 Evaluator.prototype.throwError = function(msg){
 	throw new Error("EVALUATOR ERROR:" + msg);
 };
-
-function add(a, b) {
-	return parseFloat((a+b).toPrecision(12));
-}
-function sub(a, b) {
-	return parseFloat((a-b).toPrecision(12));
-}
-function mul(a, b) {
-	return parseFloat((a*b).toPrecision(12));
-}
-function div(a, b) {
-	return a / b;
-}
-function pow(base, exp) {
-	return parseFloat((Math.pow(base,exp).toPrecision(12)));
-}
-function mod(a, b) {
-	return a % b;
-}
 
 module.exports=Evaluator;
