@@ -42,7 +42,7 @@ var lists = {
 	},
 
 	charList: {
-		"+" : (operandCodes.INTEGER | operandCodes.CHAR),
+		"+" : (operandCodes.INTEGER | operandCodes.CHAR| operandCodes.STRING),
 		"-":  (operandCodes.INTEGER | operandCodes.CHAR),
 		"==": (operandCodes.INTEGER | operandCodes.CHAR),
 		"!=": (operandCodes.INTEGER | operandCodes.CHAR),
