@@ -55,7 +55,6 @@ Evaluator.prototype.evaluate = function(postfixstack){
 			this.tempstack.push(this.item);
 			//retira um novo item da stack pos fixa
 			this.item=this.postfixstack.shift();
-			console.log(this.tempstack);
 		}
 		//se o token for um operador binario
 		if(this.item.type_==tokenTypes.BINARYOP){
@@ -72,7 +71,6 @@ Evaluator.prototype.evaluate = function(postfixstack){
 				this.throwError(err);
 			}
 			this.tempstack.push(this.resultToken);
-			console.log(this.tempstack);
 		}
 		else if(this.item.type_==tokenTypes.UNARY_LEFT_OP){
 			this.token1=this.tempstack.shift();
@@ -86,7 +84,6 @@ Evaluator.prototype.evaluate = function(postfixstack){
 				this.throwError(err);
 			}
 			this.tempstack.push(this.resultToken);
-			console.log(this.resultToken);
 		}
 		else if(this.item.type_==tokenTypes.UNARY_RIGHT_OP){
 			this.token1=this.tempstack.shift();
@@ -100,7 +97,6 @@ Evaluator.prototype.evaluate = function(postfixstack){
 				this.throwError(err);
 			}
 			this.tempstack.push(this.resultToken);
-			console.log(this.tempstack);
 		}
 		else if(this.item.type_==tokenTypes.BINARY_LOGIC_OP){
 			this.token2=this.tempstack.shift();
@@ -116,7 +112,6 @@ Evaluator.prototype.evaluate = function(postfixstack){
 				this.throwError(err);
 			}
 			this.tempstack.push(this.resultToken);
-			console.log(this.tempstack);
 		}
 	}
 	if(this.resultToken.type_==tokenTypes.INTEGER){
