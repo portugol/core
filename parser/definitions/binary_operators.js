@@ -38,16 +38,14 @@ module.exports.binaryOps ={
 			throw "Operador nao definido";
 		}
 		//converte símbolos para valores
-		//var value1 =convertToValue(token1,finalType);
-		//var value2 =convertToValue(token2,finalType);
-		var value1=token1.value_;
-		var value2=token2.value_;
-
+		var value1 =convertToValue(token1,finalType);
+		var value2 =convertToValue(token2,finalType);
 
 		//guarda o resultado da operação
 		var result =func(value1,value2);
+
 		if(finalType==vartypeCodes.INTEGER){
-			result=parseInt(result);
+			result=parseInt(result,10);
 			return new Token(tokenTypes.INTEGER, result);
 		}
 		if(finalType==vartypeCodes.REAL){
@@ -59,7 +57,7 @@ module.exports.binaryOps ={
 			return new Token(tokenTypes.CHAR, result);
 		}
 		if(finalType==vartypeCodes.STRING){
-			result =value.toString();
+			result=result.toString();
 			return new Token(tokenTypes.STRING, result);
 		}
 		if(finalType==vartypeCodes.BOOLEAN){
@@ -69,7 +67,20 @@ module.exports.binaryOps ={
 };
 
 
-
+function convertToValue(token, finalType){
+	if(finalType==vartypeCodes.INTEGER){
+		return getIntValue(token);
+	}
+	if(finalType==vartypeCodes.REAL){
+		return getRealValue(token);
+	}
+	if(finalType==vartypeCodes.CHAR){
+		return getIntValue(token);
+	}
+	if(finalType==vartypeCodes.STRING){
+		return token.value_;
+	}
+}
 //Converte o código do tokenType em código binário do tipo de variável
 function tokenTypeToVarType(tokenType){
 	return typeToCode[tokenType];
@@ -89,7 +100,7 @@ function getIntValue(token){
 	if(token.type_==tokenTypes.CHAR){
 		return token.value_.charCodeAt(0);
 	}
-	return parseInt(token.value_);
+	return parseInt(token.value_,10);
 }
 
 function getRealValue(token){
@@ -100,12 +111,11 @@ function getRealValue(token){
 }
 
 function add(value1, value2){
-	var result=value1+value2;
-	return result;
+	return value1+value2;
 }
 
 function sub(value1,value2){
-	return result=value1-value2;
+	return value1-value2;
 }
 
 function mul(value1,value2){
