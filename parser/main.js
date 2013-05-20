@@ -6,7 +6,7 @@ var binops=require('./definitions/binary_operators').binops;
 var operandCodes=require('./compatibility/vartype_codes');
 var Evaluator = require('./evaluator');
 var unaryLeftComp=require('./compatibility/unary_left_comp').unaryLeftComp;
-
+var u=require('./compatibility/unary_right_comp').unaryRightComp;
 //p.parse("2*(1+sin(0+0))/3"); OK 
 //p.parse("a&&b||c&&d"); OK
 //p.parse("!(a&&c||b&&a&&!c)"; OK
@@ -37,13 +37,13 @@ var unaryLeftComp=require('./compatibility/unary_left_comp').unaryLeftComp;
  
 try{
 	var p = new Expression(false,true);
-	var expr="-(1*23/46.3*20.5)*2/4**10";
+	var expr="~(--1!+2)!";
 	var stack = p.toPostfix(expr);
 	
 	var e = new Evaluator();
 	console.log("RESULT:");
 	console.log(e.evaluate(stack));
-	console.log(-(1*23/46.3*20.5)*2/(Math.pow(4,10)));
+
 }
 catch(err){
 	console.log(err.message);

@@ -1,13 +1,11 @@
 var vartypeCodes=require('../compatibility/vartype_codes'),
 tokenTypes=require('./token_types'),
 binComp=require('../compatibility/binary_comp').binComp,
-comp=require('../compatibility/unary_left_comp').unaryLeftComp,
+comp=require('../compatibility/unary_right_comp').unaryRightComp,
 Token=require('../token');
 
 var ops={
-	"!": logicNot,
-	"-": negative,
-	"~": bitwiseNot
+	"!": factorial
 };
 //converter o código tokenType em código binário de tipo de variável
 var typeToCode ={};
@@ -19,7 +17,7 @@ typeToCode[tokenTypes.BOOLEAN]=vartypeCodes.BOOLEAN;
 
 var finalType={};
 
-module.exports.leftUnaryOps ={
+module.exports.rightUnaryOps ={
 	calculate: function(token1, operatorToken){
 		if(!(checkCompatibility(token1, operatorToken))){
 			throw "A operacao nao pode ser efectuada com dados deste tipo";
@@ -30,7 +28,7 @@ module.exports.leftUnaryOps ={
 		if(func===undefined){
 			throw "Operador nao definido";
 		}
-		//converte símbolo para valor
+		//guarda o valor
 		var value1 =token1.value_;
 		//guarda o resultado da operação
 		var result =func(value1);
@@ -80,15 +78,16 @@ function getRealValue(token){
 	return parseFloat(token.value_);
 }
 
-function bitwiseNot(value){
-	return (~value);
-}
-
-function negative(value){
-	return value*(-1);
-}
-
-function logicNot(value){
-	return !(value);
+function factorial(value){
+	if(value<0){
+		//console.log(value);
+		throw "Factorial de numero negativo";
+	}
+	if(value===0){
+		return 1;
+	}
+	else{
+		return (value*factorial(value-1));
+	}
 }
 

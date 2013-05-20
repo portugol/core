@@ -20,6 +20,7 @@
 	var NUMBER       = 1 << 12;
 	var BITWISE_NOT  = 1 << 13;
 	var VAR          = 1 << 14;
+	var FACT         = 1 << 15;
 	var PRIMARY      = (NUMBER | TEXT | BOOLEAN);
 
 	var Expression = function(isArgument, isDebug){
@@ -91,14 +92,6 @@
 				}
 				this.addOperator(tokenTypes.UNARY_LEFT_OP);
 				expected=(NUMBER| LPAREN | VAR);
-			}
-			else if(this.isNot()){
-				if((expected & NOT) === 0){
-					this.throwError(this.pos, "Nao e esperado um operador NOT");
-					//throw new Error("Nao e esperado um operador NOT");
-				}
-				this.addOperator(tokenTypes.UNARY_LEFT_OP);
-				expected=(BOOLEAN | LPAREN | VAR);
 			}
 			else if(this.isArithmeticOp()){
 				if((expected & ARITHMETICOP) === 0){
@@ -173,10 +166,10 @@
 					//throw new Error("Nao e esperado um numero");
 				}
 				if(this.argumentExpected){
-					expected = (ARITHMETICOP| RPAREN | COMMA);
+					expected = (ARITHMETICOP| RPAREN | COMMA | FACT);
 				}
 				else{
-					expected = (ARITHMETICOP | RPAREN);
+					expected = (ARITHMETICOP | RPAREN | FACT);
 				}
 				this.addOperand(this.tokentype);
 			}
@@ -246,11 +239,29 @@
 				}
 				else{
 					//expectedParameter=NOPARAMETER; //já não são esperados parâmetros
-					expected = (ARITHMETICOP | LOGICOP | RPAREN);
+					expected = (ARITHMETICOP | LOGICOP | RPAREN | FACT);
 				}
 				this.tokensymbol=")";
 				this.tokenprio=prio.PARENT;
 				this.addOperator(tokenTypes.PARENT);
+			}
+			else if(this.isNot()){
+				if((expected & NOT) === 0){
+					//verifica se é factorial
+					if((expected & FACT) !== 0){
+						this.tokensymbol="!";
+						this.tokenprio=prio.UNARY;
+						this.addOperator(tokenTypes.UNARY_RIGHT_OP);
+						expected=(ARITHMETICOP | RPAREN);
+					}
+					else{
+						this.throwError(this.pos, "Nao e esperado um operador NOT");
+					}
+				}
+				else{
+					this.addOperator(tokenTypes.UNARY_LEFT_OP);
+					expected=(BOOLEAN | LPAREN | VAR);
+				}
 			}
 			//Se o caracter é uma vírgula
 			else if (this.isComma()) {

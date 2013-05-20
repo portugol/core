@@ -1,6 +1,7 @@
 module.exports = {
 	VALUE:0,
 	//PARENT:1,  // ()   []   ->   .   :: (Grouping, scope, array/member access)
+	UNARY_RIGHT:1,
 	UNARY:2,  // !   ~   -   +   *   &   sizeof   type cast ++x   --x  
 	POW:3,  // ^ (pow) functions
 	MUL:4,  // *   /   %
