@@ -549,7 +549,6 @@
 		}
 		else if(type_==tokenTypes.REAL){
 			//conversão para real
-			console.log(this.tokensymbol);
 			value=parseFloat(this.tokensymbol);
 		}
 		else{

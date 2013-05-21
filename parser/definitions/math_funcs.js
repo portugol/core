@@ -23,14 +23,13 @@ module.exports.mathFuncs ={
 			if(dictionary[i].symbol==operatorToken.value_){
 				func=eval(operatorToken.value_); //guarda a função JS de acordo com o value do token
 				if(numParams==dictionary[i].params){
-					for(var j=0; i<numParams-1; j++){
-						if(tokenTypeToVarType(values[j].type_)!=dictionary[j].paramTypes[j]){
-							throw "tipo de parametro invalido";
+					for(var j=0; j<numParams; j++){
+						if((tokenTypeToVarType(values[j].type_) & dictionary[i].paramTypes[j])===0){
+							throw "o tipo do parametro "+j+" e invalido";
 						}
 					}
 				}
 				else{
-
 					throw "numero de parametros invalido";
 				}
 				break;
