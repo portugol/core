@@ -21,6 +21,7 @@
 	var BITWISE_NOT  = 1 << 13;
 	var VAR          = 1 << 14;
 	var FACT         = 1 << 15;
+	var MATHFUNC_CALL = 1<< 16;
 	var PRIMARY      = (NUMBER | TEXT | BOOLEAN);
 
 	var Expression = function(isArgument, isDebug){
@@ -181,15 +182,16 @@
 				//****************************************************************
 				// SE É ESPERADA UMA FUNÇAO
 				//****************************************************************
-				if (expected & CALL) {
+				if ((expected & CALL) || (expected & MATHFUNC_CALL)) {
 					//****************************************************************
 					// MODIFICA O TIPO DE TOKEN DE VARIAVEL PARA FUNCAO
 					//****************************************************************
-					var aux = this.postfixStack.pop();
-					this.tokenprio=prio.VALUE;
-					this.tokensymbol=aux.value_;
-					this.addOperator(tokenTypes.FUNC);
-
+					if(expected & CALL){
+						var aux = this.postfixStack.pop();
+						this.tokenprio=prio.VALUE;
+						this.tokensymbol=aux.value_;
+						this.addOperator(tokenTypes.FUNC);
+					}
 					//****************************************************************
 					// AADQUIRE O ARGUMENTO DA FUNÇAO E AVALIA RECURSIVAMENTE
 					//****************************************************************
@@ -213,7 +215,6 @@
 					}
 					//guarda argumento da funçao
 					var argument=this.expr.substring(oldpos,this.pos-1);
-
 					//avaliar recursivamente a expressão do argumento
 					this.parameterStack= new Expression(true).toPostfix(argument);
 
@@ -221,7 +222,6 @@
 					this.tokensymbol="argument";
 					this.tokenprio=prio.VALUE;
 					this.addOperand(tokenTypes.ARGUMENT);
-
 					expected = (ARITHMETICOP | LOGICOP | RPAREN) ;
 				}
 				//****************************************************************
@@ -309,12 +309,13 @@
 				for(i=0; i<definitions.length; i++){
 					//se encontrar o símbolo nas definitions
 					if(definitions[i].symbol==this.tmpstr){
-						this.tokensymbol=definitions[i].symbol;
 						this.tokenprio=prio.VALUE;
 						// se é do tipo value
 						if(definitions[i].type=='value'){
+							this.tokensymbol=definitions[i].value;
 							//se o subtipo é boolean 
 							if(definitions[i].subtype=='boolean'){
+								this.tokensymbol=definitions[i].value;
 								//verifica se é esperado este subtipo.
 								if((expected & BOOLEAN)===0){
 									this.throwError((this.pos-definitions[i].symbol.length+1) ,"Não e esperado um boolean");
@@ -334,16 +335,19 @@
 							//o subtipo não é boolean nem null
 							//se neste momento está a ser avaliado um argumento é esperada  ainda uma vírgula
 							else if(this.argumentExpected){
+								this.addOperand(tokenTypes.REAL);
 								expected = (ARITHMETICOP | LOGICOP | RPAREN | COMMA);
 							}
 							else{
+								this.addOperand(tokenTypes.REAL);
 								expected = (ARITHMETICOP | LOGICOP | RPAREN);
 							}
 						}
 						//é uma definition do tipo função
 						else if(definitions[i].type=='function'){
+							this.tokensymbol=definitions[i].symbol;
 							this.addOperator(tokenTypes.MATHFUNC);
-							expected = (LPAREN | PRIMARY | VAR | CALL);
+							expected = (LPAREN | PRIMARY | VAR | MATHFUNC_CALL);
 						}
 						break; //quebra o for
 					}
@@ -539,34 +543,24 @@
 	Expression.prototype.addOperand = function(type_){
 		var operand;
 		var value;
-		if(type_==tokenTypes.ARGUMENT){
-			operand = new Token(type_, this.tokensymbol, this.tokenprio, this.parameterStack);
-		}
-		else if(type_==tokenTypes.INTEGER){
+		if(type_==tokenTypes.INTEGER){
 			//conversão para inteiro
-			value=parseInt(this.tokensymbol);
+			value=parseInt(this.tokensymbol,10);
 		}
 		else if(type_==tokenTypes.REAL){
 			//conversão para real
+			console.log(this.tokensymbol);
 			value=parseFloat(this.tokensymbol);
-		}
-		else if(type_==tokenTypes.BOOLEAN){
-			var keyword;
-			for(var i=0; i<definitions.length; i++){
-				if(definitions[i].symbol==this.tokensymbol){
-					if(definitions[i].name=="true"){
-						value=true;
-					}
-					else{
-						value=false;
-					}
-				}
-			}
 		}
 		else{
 			value=this.tokensymbol;
 		}
-		operand = new Token(type_, value, this.tokenprio);
+		if(type_==tokenTypes.ARGUMENT){
+			operand = new Token(type_, this.tokensymbol, this.tokenprio, this.parameterStack);
+		}
+		else{
+			operand = new Token(type_, value, this.tokenprio);
+		}
 		this.postfixStack.push(operand);
 	};
 
@@ -922,22 +916,6 @@
 			else{
 				this.throwError(startpos+1, "Caracter mal construido");
 			}
-		}
-		return false;
-	};
-
-	Expression.prototype.isMathFunc = function(str){
-		if (str.length > 0 && (str in mathfuncs)) {
-			return true;
-		}
-		return false;
-	};
-
-	Expression.prototype.isConst = function(str){
-		if (str.length > 0 && (str in consts)) {
-			this.tokensymbol=str;
-			this.tokenprio=prio.VALUE;
-			return true;
 		}
 		return false;
 	};

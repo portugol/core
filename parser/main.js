@@ -37,13 +37,13 @@ var u=require('./compatibility/unary_right_comp').unaryRightComp;
  
 try{
 	var p = new Expression(false,true);
-	var expr="~(--1!+2)!";
+	var expr="2*cos(PI/2)";
 	var stack = p.toPostfix(expr);
 	
 	var e = new Evaluator();
 	console.log("RESULT:");
 	console.log(e.evaluate(stack));
-
+	console.log(2*Math.cos(Math.PI/2));
 }
 catch(err){
 	console.log(err.message);
