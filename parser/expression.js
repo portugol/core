@@ -11,7 +11,7 @@
 	var COMMA        = 1 << 3;
 	var SIGNAL       = 1 << 4;
 	var CALL         = 1 << 5;
-	var NULLARY_CALL = 1 << 6;
+	//var NULLARY_CALL = 1 << 6;
 	var NOT          = 1 << 7;
 	var BOOLEAN      = 1 << 8;
 	var TEXT         = 1 << 9;
@@ -60,21 +60,11 @@
 		this.postfixStack=[];
 		this.parameterStack=[];
 
-		/*
-		//SE A EXPRESSAO É NULA (tamanho=0) DEVOLVE UM TOKEN NULL
+		
+		//SE A EXPRESSAO É NULA (tamanho=0)
 		if(expr.length===0){
-			for(var i=0; i<definitions.length; i++){
-				if(definitions[i].subtype=='null'){
-					this.tokensymbol=definitions[i].symbol;
-					this.tokenprio=prio.VALUE;
-					this.addOperand(tokenTypes.NULL);
-					break;
-				}
-			}
-			console.log("\n############################################################");
-			this.printStack(this.postfixStack);
-			return this.postfixStack;
-		}*/
+			return []; //devolve array vazio
+		}
 
 		while(this.pos<this.expr.length){
 			/*if(this.isUnaryOp()){
@@ -159,7 +149,8 @@
 					this.throwError(this.pos, "Nao e esperado um operador logico");
 				}
 				this.addOperator(tokenTypes.BINARY_LOGIC_OP);
-				expected=(BOOLEAN | LPAREN | VAR | NOT);
+				expected=( PRIMARY | LPAREN | VAR | NOT);
+				//expected=( BOOLEAN | LPAREN | VAR | NOT);	
 			}
 			else if(this.isNumber()){
 				if((expected & NUMBER) === 0){
@@ -167,10 +158,10 @@
 					//throw new Error("Nao e esperado um numero");
 				}
 				if(this.argumentExpected){
-					expected = (ARITHMETICOP| RPAREN | COMMA | FACT);
+					expected = (ARITHMETICOP| RPAREN | COMMA | FACT | LOGICOP);
 				}
 				else{
-					expected = (ARITHMETICOP | RPAREN | FACT);
+					expected = (ARITHMETICOP | RPAREN | FACT | LOGICOP);
 				}
 				this.addOperand(this.tokentype);
 			}
@@ -238,8 +229,13 @@
 					//throw new Error("Nao e esperado um parentesis direito");
 				}
 				else{
+					if(this.argumentExpected){
+						expected = (ARITHMETICOP | LOGICOP | RPAREN | FACT | COMMA);
+					}
 					//expectedParameter=NOPARAMETER; //já não são esperados parâmetros
-					expected = (ARITHMETICOP | LOGICOP | RPAREN | FACT);
+					else{
+						expected = (ARITHMETICOP | LOGICOP | RPAREN | FACT);
+					}
 				}
 				this.tokensymbol=")";
 				this.tokenprio=prio.PARENT;
@@ -271,7 +267,10 @@
 					//throw new Error("unexpected \",\"");
 				}
 				//this.addOperator(tokenTypes.COMMA);
-				this.numOperands+=1;
+				//this.numOperands+=1;
+				this.tokensymnol=",";
+				this.tokenprio=prio.COMMA;
+				this.addOperator(tokenTypes.COMMA);
 				expected = (PRIMARY | VAR | SIGNAL | NOT | LPAREN | BITWISE_NOT);
 			}
 			else if(this.isChar()){
@@ -280,10 +279,12 @@
 				}
 				this.addOperand(tokenTypes.CHAR);
 				if(this.argumentExpected){
-					expected = (ARITHMETICOP | RPAREN | COMMA);
+					expected = (ARITHMETICOP | LOGICOP | RPAREN | COMMA);
+					//expected = (ARITHMETICOP | RPAREN | COMMA);
 				}
 				else{
-					expected = (ARITHMETICOP | RPAREN);
+					expected = (ARITHMETICOP | LOGICOP | RPAREN);
+					//expected = (ARITHMETICOP | RPAREN);
 				}
 			}
 			else if(this.isString()){
@@ -293,10 +294,12 @@
 				}
 				this.addOperand(tokenTypes.STRING);
 				if(this.argumentExpected){
-					expected = (ARITHMETICOP | RPAREN | COMMA);
+					expected = (ARITHMETICOP | LOGICOP | RPAREN | COMMA);
+					//expected = (ARITHMETICOP | RPAREN | COMMA);
 				}
 				else{
-					expected = (ARITHMETICOP | RPAREN);
+					expected = (ARITHMETICOP | LOGICOP | RPAREN);
+					//expected = (ARITHMETICOP | RPAREN | COMMA);
 				}
 			}
 			//****************************************************************
@@ -347,7 +350,7 @@
 						else if(definitions[i].type=='function'){
 							this.tokensymbol=definitions[i].symbol;
 							this.addOperator(tokenTypes.MATHFUNC);
-							expected = (LPAREN | PRIMARY | VAR | MATHFUNC_CALL);
+							expected = (LPAREN | MATHFUNC_CALL);
 						}
 						break; //quebra o for
 					}
@@ -377,7 +380,7 @@
 				expected = (PRIMARY | VAR | LPAREN | BITWISE_NOT);
 			}
 			else if(this.isWhite()){
-
+				//salta espaço em branco
 			}
 			else {
 				this.throwError("Operacao invalida");
@@ -385,6 +388,9 @@
 		} //FIM DO WHILE
 		//descarrega os operadores restantes para a pilha pos fixa
 		this.popAll();
+		if(this.argumentExpected){
+			this.removeCommas();
+		}
 
 		if(this.isDebug){
 			console.log("numero de operandos: "+this.numOperands);
@@ -405,6 +411,18 @@
 
 
 		return this.postfixStack;
+	};
+
+	Expression.prototype.removeCommas = function(){
+		var tempStack=[];
+		var item={};
+		while(this.postfixStack.length>0){
+			item=this.postfixStack.pop();
+			if(item.type_!=tokenTypes.COMMA){
+				tempStack.push(item);
+			}
+		}
+		this.postfixStack=tempStack;
 	};
 
 	Expression.prototype.isAssign = function(){
@@ -463,7 +481,7 @@
 			this.numOperands++; //é esperado 1 operando
 		}
 		if(type_===tokenTypes.COMMA){
-			this.numOperands+=2; //são esperados 2 operandos
+			this.numOperands+=1; //é esperado 1 operando (a vírgula é apenas um separador e é removida no fim)
 		}
 		if(type_===tokenTypes.ASSIGN){
 			this.numOperands+=2; //são esperados 2 operandos
@@ -774,9 +792,9 @@
 		var decimalPoint=0;
 
 		while (this.pos < this.expr.length) {
-			var code = this.expr.charCodeAt(this.pos);
+			var code = this.expr.charAt(this.pos);
 			//se é algarismo
-			if (code >= 48 && code <= 57) {
+			if (code >= '0' && code <= '9') {
 				str += this.expr.charAt(this.pos);
 				this.pos++;
 				this.tokensymbol=str;
@@ -784,14 +802,21 @@
 				r = true;
 			}
 			//se é ponto decimal
-			else if(code==46){
+			else if(code=='.'){
 				str += this.expr.charAt(this.pos);
 				this.pos++;
 				this.tokensymbol=str;
 				str += this.isDecimalPart();
 				this.tokensymbol=str;
 				this.tokentype=tokenTypes.REAL;
-			}
+			}/*
+			if(code=='e' || code=='E'){
+				str+=this.expr.charAt(this.pos);
+				this.pos++;
+				str+=this.addScientificNotation();
+				this.tokensymbol=str;
+				this.tokentype=tokenTypes.INTEGER;
+			}*/
 			else {
 				break; //quebra o ciclo quando o caracter não for um algarismo nem ponto decimal
 			}
@@ -805,9 +830,9 @@
 		//percorre os caracteres da expressão desde a posição actual ao final
 		while (this.pos < this.expr.length) {
 			//guarda o caracter actual
-			var code = this.expr.charCodeAt(this.pos);
+			var code = this.expr.charAt(this.pos);
 			//se o caracter é alfanumérico (0-9) 
-			if (code >= 48 && code <= 57) {
+			if (code >= '0' && code <= '9') {
 				str += this.expr.charAt(this.pos);
 				this.pos++;
 				this.tokensymbol = parseFloat(str);
@@ -815,12 +840,31 @@
 			//se não é número
 			else{
 				//se é um ponto decimal
-				if(code==46){
+				if(code=='.'){
 					this.throwError(this.pos, "Tem mais que um ponto decimal");
 				}
 				else{
 					break;
 				}
+			}
+		}
+		return str;
+	};
+
+	Expression.prototype.addScientificNotation= function(){
+		var str = "";
+		var ch = this.expr.charAt(this.pos);
+		if(ch=="+" || ch=="-"){
+			str+=ch;
+		}
+		//percorre os caracteres da expressão desde a posição actual ao final
+		while (this.pos < this.expr.length) {
+			ch=this.expr.charAt(this.pos);
+			if(ch >= '0' && ch <= '9'){
+				str+=ch;
+			}
+			else{
+				this.throwError(this.pos, "Notacao cientifica mal construida");
 			}
 		}
 		return str;
@@ -940,7 +984,11 @@
 	};
 
 	Expression.prototype.isWhite = function(){
-
+		if(this.expr.charAt(this.pos)==" "){
+			this.pos++;
+			return true;
+		}
+		return false;
 	};
 
 	Expression.prototype.unescape = function(v, pos) {

@@ -21,8 +21,8 @@ module.exports = [
 		'symbol': 'NULL',
 		'name': "null",
 		'type': 'value',
-		'value': null,
-		'subtype': 'null',
+		'value': undefined,
+		'subtype': 'null'
 	},
 	{
 		'id': 4,

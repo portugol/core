@@ -75,10 +75,24 @@ function tokenTypeToVarType(tokenType){
 }
 
 function getIntValue(token){
+	var str=token.value_.toString();
+	str=str.toLowerCase();
+	//se for notação científica devolve o próprio valor
+	if(isScientificNotation()){
+		return token.value_;
+	}
 	if(token.type_==tokenTypes.CHAR){
 		return token.value_.charCodeAt(0);
 	}
 	return parseInt(token.value_,10);
+}
+
+function isScientificNotation(str){
+	var ePos=str.indexOf("e");
+	if(ePos!=-1){
+		return true;
+	}
+	return false;
 }
 
 function getRealValue(token){
