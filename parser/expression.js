@@ -11,7 +11,6 @@
 	var COMMA        = 1 << 3;
 	var SIGNAL       = 1 << 4;
 	var CALL         = 1 << 5;
-	//var NULLARY_CALL = 1 << 6;
 	var NOT          = 1 << 7;
 	var BOOLEAN      = 1 << 8;
 	var TEXT         = 1 << 9;
