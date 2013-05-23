@@ -2,6 +2,7 @@
 		definitions= require('./definitions/dictionary'),
 		prio= require('./definitions/priorities'),
 		tokenTypes= require('./definitions/token_types'),
+		nodeTypes= require('../core-master/lib/nodes/definition'),
 		Token=require('./token'),
 		util = require('util'),
 		Debug = require('./debug/debug'); 
@@ -23,9 +24,10 @@
 	var MATHFUNC_CALL = 1<< 16;
 	var PRIMARY      = (NUMBER | TEXT | BOOLEAN);
 
-	var Expression = function(isArgument, isDebug){
+	var Expression = function(isArgument, isDebug, nodeType_){
 		this.argumentExpected = isArgument || false;
 		this.isDebug = isDebug || false;
+		this.nodeType_=nodeType_;
 	};
 
 	if (!Array.indexOf) {
@@ -369,6 +371,9 @@
 				}
 			}
 			else if(this.isAssign()){
+				if(this.nodeType_!=nodeTypes.PROCESS){
+					this.throwError("Nao e permitido fazer atribuicao");
+				}
 				var item=this.postfixStack[this.postfixStack.length-1];
 				if(this.postfixStack.length==1 && item.type_==tokenTypes.VAR){
 					this.addOperator(tokenTypes.ASSIGN);
@@ -416,7 +421,8 @@
 		var tempStack=[];
 		var item={};
 		while(this.postfixStack.length>0){
-			item=this.postfixStack.pop();
+			//retira o primeiro item da pilha
+			item=this.postfixStack.shift();
 			if(item.type_!=tokenTypes.COMMA){
 				tempStack.push(item);
 			}

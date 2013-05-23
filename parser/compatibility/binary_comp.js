@@ -1,5 +1,4 @@
 var tokenTypes= require('../definitions/token_types'),
-operandCodes=require('./vartype_codes'),
 util = require('util');
 //**********************************************
 // TIPOS DE VARIAVEL COMPATIVEIS ENTRE OPERAÇÕES
@@ -7,66 +6,66 @@ util = require('util');
 
 var lists = {
 	integerList: {
-		"+" : (operandCodes.NUMBER | operandCodes.STRING | operandCodes.CHAR),
-		"-":  (operandCodes.NUMBER | operandCodes.CHAR),
-		"/":  operandCodes.NUMBER,
-		"*":  operandCodes.NUMBER,
-		"**": operandCodes.NUMBER,
-		"%":  operandCodes.NUMBER,
-		"==": (operandCodes.NUMBER | operandCodes.CHAR),
-		"!=": (operandCodes.NUMBER | operandCodes.CHAR),
-		"<=": (operandCodes.NUMBER | operandCodes.CHAR),
-		"<":  (operandCodes.NUMBER | operandCodes.CHAR),
-		">=": (operandCodes.NUMBER | operandCodes.CHAR),
-		">":  (operandCodes.NUMBER | operandCodes.CHAR),
-		"<<": operandCodes.INTEGER,
-		">>": operandCodes.INTEGER,
-		"|":  operandCodes.INTEGER,
-		"&":  operandCodes.INTEGER,
-		"^":  operandCodes.INTEGER
+		"+" : (tokenTypes.NUMBER | tokenTypes.STRING | tokenTypes.CHAR),
+		"-":  (tokenTypes.NUMBER | tokenTypes.CHAR),
+		"/":  tokenTypes.NUMBER,
+		"*":  tokenTypes.NUMBER,
+		"**": tokenTypes.NUMBER,
+		"%":  tokenTypes.NUMBER,
+		"==": (tokenTypes.NUMBER | tokenTypes.CHAR),
+		"!=": (tokenTypes.NUMBER | tokenTypes.CHAR),
+		"<=": (tokenTypes.NUMBER | tokenTypes.CHAR),
+		"<":  (tokenTypes.NUMBER | tokenTypes.CHAR),
+		">=": (tokenTypes.NUMBER | tokenTypes.CHAR),
+		">":  (tokenTypes.NUMBER | tokenTypes.CHAR),
+		"<<": tokenTypes.INTEGER,
+		">>": tokenTypes.INTEGER,
+		"|":  tokenTypes.INTEGER,
+		"&":  tokenTypes.INTEGER,
+		"^":  tokenTypes.INTEGER
 	},
 
 	realList: {
-		"+" : (operandCodes.NUMBER | operandCodes.STRING),
-		"-":  operandCodes.NUMBER,
-		"/":  operandCodes.NUMBER,
-		"*":  operandCodes.NUMBER,
-		"**": operandCodes.NUMBER,
-		"%":  operandCodes.NUMBER,
-		"==": operandCodes.NUMBER,
-		"!=": operandCodes.NUMBER,
-		"<=": operandCodes.NUMBER,
-		"<":  operandCodes.NUMBER,
-		">=": operandCodes.NUMBER,
-		">":  operandCodes.NUMBER
+		"+" : (tokenTypes.NUMBER | tokenTypes.STRING),
+		"-":  tokenTypes.NUMBER,
+		"/":  tokenTypes.NUMBER,
+		"*":  tokenTypes.NUMBER,
+		"**": tokenTypes.NUMBER,
+		"%":  tokenTypes.NUMBER,
+		"==": tokenTypes.NUMBER,
+		"!=": tokenTypes.NUMBER,
+		"<=": tokenTypes.NUMBER,
+		"<":  tokenTypes.NUMBER,
+		">=": tokenTypes.NUMBER,
+		">":  tokenTypes.NUMBER
 	},
 
 	charList: {
-		"+" : (operandCodes.INTEGER | operandCodes.CHAR| operandCodes.STRING),
-		"-":  (operandCodes.INTEGER | operandCodes.CHAR),
-		"==": (operandCodes.INTEGER | operandCodes.CHAR),
-		"!=": (operandCodes.INTEGER | operandCodes.CHAR),
-		"<=": (operandCodes.INTEGER | operandCodes.CHAR),
-		"<":  (operandCodes.INTEGER | operandCodes.CHAR),
-		">=": (operandCodes.INTEGER | operandCodes.CHAR),
-		">":  (operandCodes.INTEGER | operandCodes.CHAR)
+		"+" : (tokenTypes.INTEGER | tokenTypes.CHAR| tokenTypes.STRING),
+		"-":  (tokenTypes.INTEGER | tokenTypes.CHAR),
+		"==": (tokenTypes.INTEGER | tokenTypes.CHAR),
+		"!=": (tokenTypes.INTEGER | tokenTypes.CHAR),
+		"<=": (tokenTypes.INTEGER | tokenTypes.CHAR),
+		"<":  (tokenTypes.INTEGER | tokenTypes.CHAR),
+		">=": (tokenTypes.INTEGER | tokenTypes.CHAR),
+		">":  (tokenTypes.INTEGER | tokenTypes.CHAR)
 	},
 
 	stringList: {
-		"+" : (operandCodes.STRING | operandCodes.CHAR | operandCodes.NUMBER),
-		"==": operandCodes.STRING,
-		"!=": operandCodes.STRING,
-		"<=": operandCodes.STRING,
-		"<":  operandCodes.STRING,
-		">=": operandCodes.STRING,
-		">":  operandCodes.STRING
+		"+" : (tokenTypes.STRING | tokenTypes.CHAR | tokenTypes.NUMBER),
+		"==": tokenTypes.STRING,
+		"!=": tokenTypes.STRING,
+		"<=": tokenTypes.STRING,
+		"<":  tokenTypes.STRING,
+		">=": tokenTypes.STRING,
+		">":  tokenTypes.STRING
 	},
 
 	booleanList: {
-		"==": operandCodes.BOOLEAN,
-		"!=": operandCodes.BOOLEAN,
-		"&&": operandCodes.BOOLEAN,
-		"||": operandCodes.BOOLEAN
+		"==": tokenTypes.BOOLEAN,
+		"!=": tokenTypes.BOOLEAN,
+		"&&": tokenTypes.BOOLEAN,
+		"||": tokenTypes.BOOLEAN
 	}
 };
 
@@ -75,138 +74,138 @@ var lists = {
 module.exports.binComp = {
 	//construtor
 
-	INTEGER: operandCodes.INTEGER,
-	REAL: operandCodes.REAL,
-	STRING: operandCodes.STRING,
-	CHAR:   operandCodes.CHAR,
-	BOOLEAN: operandCodes.BOOLEAN,
-	NULL:    operandCodes.NULL,
-	ALL:     operandCodes.ALL,
-	NUMBER:  operandCodes.NUMBER,
+	INTEGER: tokenTypes.INTEGER,
+	REAL: tokenTypes.REAL,
+	STRING: tokenTypes.STRING,
+	CHAR:   tokenTypes.CHAR,
+	BOOLEAN: tokenTypes.BOOLEAN,
+	NULL:    tokenTypes.NULL,
+	ALL:     tokenTypes.ALL,
+	NUMBER:  tokenTypes.NUMBER,
 
 	//*******************************************
 	// TIPOS DE VARIAVEL RESULTANTES DE OPERAÇÕES
 	//*******************************************
 
 	/*
-	var operandCodes.INTEGERVars ={
-		operandCodes.INTEGER: tokenTypes.operandCodes.INTEGER,
-		operandCodes.REAL: tokenTypes.operandCodes.REAL,
-		operandCodes.STRING: tokenTypes.operandCodes.STRING,
-		operandCodes.CHAR: tokenTypes.operandCodes.CHAR
+	var tokenTypes.INTEGERVars ={
+		tokenTypes.INTEGER: tokenTypes.tokenTypes.INTEGER,
+		tokenTypes.REAL: tokenTypes.tokenTypes.REAL,
+		tokenTypes.STRING: tokenTypes.tokenTypes.STRING,
+		tokenTypes.CHAR: tokenTypes.tokenTypes.CHAR
 	};
-	var operandCodes.REALVars ={
-		operandCodes.INTEGER: tokenTypes.operandCodes.REAL,
-		operandCodes.REAL: tokenTypes.operandCodes.REAL,
-		operandCodes.STRING: tokenTypes.operandCodes.STRING
-	};
-
-	var operandCodes.STRINGVars ={
-		operandCodes.INTEGER: tokenTypes.operandCodes.STRING,
-		operandCodes.REAL: tokenTypes.operandCodes.STRING,
-		operandCodes.STRING: tokenTypes.operandCodes.STRING,
-		operandCodes.CHAR: tokenTypes.operandCodes.STRING
+	var tokenTypes.REALVars ={
+		tokenTypes.INTEGER: tokenTypes.tokenTypes.REAL,
+		tokenTypes.REAL: tokenTypes.tokenTypes.REAL,
+		tokenTypes.STRING: tokenTypes.tokenTypes.STRING
 	};
 
-	var operandCodes.CHARVars ={
-		operandCodes.INTEGER: tokenTypes.operandCodes.CHAR,
-		operandCodes.STRING: tokenTypes.operandCodes.STRING,
-		operandCodes.CHAR: tokenTypes.operandCodes.CHAR
+	var tokenTypes.STRINGVars ={
+		tokenTypes.INTEGER: tokenTypes.tokenTypes.STRING,
+		tokenTypes.REAL: tokenTypes.tokenTypes.STRING,
+		tokenTypes.STRING: tokenTypes.tokenTypes.STRING,
+		tokenTypes.CHAR: tokenTypes.tokenTypes.STRING
 	};
 
-	var operandCodes.BOOLEANVars ={
-		operandCodes.BOOLEAN: tokenTypes.operandCodes.BOOLEAN
+	var tokenTypes.CHARVars ={
+		tokenTypes.INTEGER: tokenTypes.tokenTypes.CHAR,
+		tokenTypes.STRING: tokenTypes.tokenTypes.STRING,
+		tokenTypes.CHAR: tokenTypes.tokenTypes.CHAR
+	};
+
+	var tokenTypes.BOOLEANVars ={
+		tokenTypes.BOOLEAN: tokenTypes.tokenTypes.BOOLEAN
 	};*/
 
 
 	varResult: [
 	{
-		'type': operandCodes.INTEGER,
+		'type': tokenTypes.INTEGER,
 		'compatibleTypes':
 		[
 		{
-			'type': operandCodes.INTEGER,
-			'result': operandCodes.INTEGER
+			'type': tokenTypes.INTEGER,
+			'result': tokenTypes.INTEGER
 		},
 		{
-			'type': operandCodes.REAL,
-			'result': operandCodes.REAL
+			'type': tokenTypes.REAL,
+			'result': tokenTypes.REAL
 		},
 		{
-			'type': operandCodes.STRING,
-			'result': operandCodes.STRING
+			'type': tokenTypes.STRING,
+			'result': tokenTypes.STRING
 		},
 		{
-			'type': operandCodes.CHAR,
-			'result': operandCodes.CHAR
+			'type': tokenTypes.CHAR,
+			'result': tokenTypes.CHAR
 		}
 		]
 	},
 	{
-		'type': operandCodes.REAL,
+		'type': tokenTypes.REAL,
 		'compatibleTypes':
 		[
 		{
-			'type': operandCodes.INTEGER,
-			'result': operandCodes.REAL
+			'type': tokenTypes.INTEGER,
+			'result': tokenTypes.REAL
 		},
 		{
-			'type': operandCodes.REAL,
-			'result': operandCodes.REAL
+			'type': tokenTypes.REAL,
+			'result': tokenTypes.REAL
 		},
 		{
-			'type': operandCodes.STRING,
-			'result': operandCodes.STRING
+			'type': tokenTypes.STRING,
+			'result': tokenTypes.STRING
 		}
 		]
 	},
 	{
-		'type': operandCodes.STRING,
+		'type': tokenTypes.STRING,
 		'compatibleTypes':
 		[
 		{
-			'type': operandCodes.INTEGER,
-			'result': operandCodes.STRING
+			'type': tokenTypes.INTEGER,
+			'result': tokenTypes.STRING
 		},
 		{
-			'type': operandCodes.REAL,
-			'result': operandCodes.STRING
+			'type': tokenTypes.REAL,
+			'result': tokenTypes.STRING
 		},
 		{
-			'type': operandCodes.STRING,
-			'result': operandCodes.STRING
+			'type': tokenTypes.STRING,
+			'result': tokenTypes.STRING
 		},
 		{
-			'type': operandCodes.CHAR,
-			'result': operandCodes.STRING
+			'type': tokenTypes.CHAR,
+			'result': tokenTypes.STRING
 		}
 		]
 	},
 	{
-		'type': operandCodes.CHAR,
+		'type': tokenTypes.CHAR,
 		'compatibleTypes':
 		[
 		{
-			'type': operandCodes.INTEGER,
-			'result': operandCodes.CHAR
+			'type': tokenTypes.INTEGER,
+			'result': tokenTypes.CHAR
 		},
 		{
-			'type': operandCodes.STRING,
-			'result': operandCodes.STRING
+			'type': tokenTypes.STRING,
+			'result': tokenTypes.STRING
 		},
 		{
-			'type': operandCodes.CHAR,
-			'result': operandCodes.CHAR
+			'type': tokenTypes.CHAR,
+			'result': tokenTypes.CHAR
 		}
 		]
 	},
 	{
-		'type': operandCodes.BOOLEAN,
+		'type': tokenTypes.BOOLEAN,
 		'compatibleTypes':
 		[
 		{
-			'type': operandCodes.BOOLEAN,
-			'result': operandCodes.BOOLEAN
+			'type': tokenTypes.BOOLEAN,
+			'result': tokenTypes.BOOLEAN
 		}
 		]
 	}
@@ -241,19 +240,19 @@ module.exports.binComp = {
 		//escolhe a código de operando adequado ao tokenType2
 		switch (tokenType2) {
 			case tokenTypes.INTEGER:
-			operandCode=operandCodes.INTEGER;
+			operandCode=tokenTypes.INTEGER;
 			break;
 			case tokenTypes.REAL:
-			operandCode=operandCodes.REAL;
+			operandCode=tokenTypes.REAL;
 			break;
 			case tokenTypes.CHAR:
-			operandCode=operandCodes.CHAR;
+			operandCode=tokenTypes.CHAR;
 			break;
 			case tokenTypes.STRING:
-			operandCode=operandCodes.STRING;
+			operandCode=tokenTypes.STRING;
 			break;
 			case tokenTypes.BOOLEAN:
-			operandCode=operandCodes.BOOLEAN;
+			operandCode=tokenTypes.BOOLEAN;
 			break;
 			default:
 			throw Error("tipo invalido");
@@ -277,20 +276,20 @@ module.exports.binComp = {
 		/*
 		//escolhe a lista de compatibilidade adequada ao tokenType1
 		switch (varType1) {
-			case operandCodes.INTEGER:
-				list=operandCodes.INTEGERVars;
+			case tokenTypes.INTEGER:
+				list=tokenTypes.INTEGERVars;
 				break;
-			case operandCodes.REAL:
-				list=operandCodes.REALVars;
+			case tokenTypes.REAL:
+				list=tokenTypes.REALVars;
 				break;
-			case operandCodes.CHAR:
-				list=operandCodes.CHARVars;
+			case tokenTypes.CHAR:
+				list=tokenTypes.CHARVars;
 				break;
-			case operandCodes.STRING:
-				list=operandCodes.STRINGVars;
+			case tokenTypes.STRING:
+				list=tokenTypes.STRINGVars;
 				break;
-			case operandCodes.BOOLEAN:
-				list=operandCodes.BOOLEANVars;
+			case tokenTypes.BOOLEAN:
+				list=tokenTypes.BOOLEANVars;
 				break;
 			default:
 				throw Error("tipo invalido");

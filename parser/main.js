@@ -36,9 +36,10 @@ var u=require('./compatibility/unary_right_comp').unaryRightComp;
 
  
 try{
-	var p = new Expression(false,true);
+	var p = new Expression(true,true);
 	var expr="2*cos(PI/2)";
 	var stack = p.toPostfix(expr);
+	console.log(stack[1].parameterStack);
 	
 	var e = new Evaluator();
 	console.log("RESULT:");

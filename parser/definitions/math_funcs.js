@@ -1,17 +1,8 @@
-var vartypeCodes=require('../compatibility/vartype_codes'),
-tokenTypes=require('./token_types'),
+var tokenTypes=require('./token_types'),
 binComp=require('../compatibility/binary_comp').binComp,
 comp=require('../compatibility/unary_left_comp').unaryLeftComp,
 Token=require('../token');
 dictionary=require('./dictionary');
-
-//converter o código tokenType em código binário de tipo de variável
-var typeToCode ={};
-typeToCode[tokenTypes.INTEGER]=vartypeCodes.INTEGER;
-typeToCode[tokenTypes.REAL]=vartypeCodes.REAL;
-typeToCode[tokenTypes.STRING]=vartypeCodes.STRING;
-typeToCode[tokenTypes.CHAR]=vartypeCodes.CHAR;
-typeToCode[tokenTypes.BOOLEAN]=vartypeCodes.BOOLEAN;
 
 var finalType={};
 module.exports.mathFuncs ={
@@ -24,7 +15,7 @@ module.exports.mathFuncs ={
 				func=eval(operatorToken.value_); //guarda a função JS de acordo com o value do token
 				if(numParams==dictionary[i].params){
 					for(var j=0; j<numParams; j++){
-						if((tokenTypeToVarType(values[j].type_) & dictionary[i].paramTypes[j])===0){
+						if((values[j].type_ & dictionary[i].paramTypes[j])===0){
 							throw "o tipo do parametro "+j+" e invalido";
 						}
 					}
@@ -35,7 +26,7 @@ module.exports.mathFuncs ={
 				break;
 			}
 		}
-		finalType=tokenTypeToVarType(tokenTypes.REAL);
+		finalType=tokenTypes.REAL;
 		if(func===undefined){
 			throw "Operador nao definido";
 		}
@@ -43,23 +34,23 @@ module.exports.mathFuncs ={
 		//guarda o resultado da operação
 		var result =func(values);
 
-		if(finalType==vartypeCodes.INTEGER){
+		if(finalType==tokenTypes.INTEGER){
 			result=parseInt(result,10);
 			return new Token(tokenTypes.INTEGER, result);
 		}
-		if(finalType==vartypeCodes.REAL){
+		if(finalType==tokenTypes.REAL){
 			result=parseFloat(result);
 			return new Token(tokenTypes.REAL, result);
 		}
-		if(finalType==vartypeCodes.CHAR){
+		if(finalType==tokenTypes.CHAR){
 			result=String.fromCharCode(result);
 			return new Token(tokenTypes.CHAR, result);
 		}
-		if(finalType==vartypeCodes.STRING){
+		if(finalType==tokenTypes.STRING){
 			result =value1.toString();
 			return new Token(tokenTypes.STRING, result);
 		}
-		if(finalType==vartypeCodes.BOOLEAN){
+		if(finalType==tokenTypes.BOOLEAN){
 			return new Token(tokenTypes.BOOLEAN, result);
 		}
 	}
@@ -67,11 +58,6 @@ module.exports.mathFuncs ={
 
 function checkCompatibility(token1, operatorToken){
 	return comp.checkCompatibility(token1.type_, operatorToken.value_);
-}
-
-//Converte o código do tokenType em código binário do tipo de variável
-function tokenTypeToVarType(tokenType){
-	return typeToCode[tokenType];
 }
 
 function getIntValue(token){

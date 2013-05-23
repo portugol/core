@@ -1,5 +1,4 @@
 var c=require('./compatibility').compatibility;
-var operandCodes=require('./vartype_codes');
 var tokenTypes= require('../definitions/token_types');
 var Evaluator=require('../evaluator');
 
@@ -124,36 +123,36 @@ var codes={
 console.log("\n\n************************************************************");
 console.log("INTEGER VARTYPES RESULT");
 console.log("************************************************************");
-console.log("INTEGER -> "+codes[c.getFinalType(operandCodes.INTEGER,operandCodes.INTEGER)]);
-console.log("REAL -> "+codes[c.getFinalType(operandCodes.INTEGER,operandCodes.REAL)]);
-console.log("STRING -> "+codes[c.getFinalType(operandCodes.INTEGER,operandCodes.STRING)]);
-console.log("CHAR-> "+codes[c.getFinalType(operandCodes.INTEGER,operandCodes.CHAR)]);
+console.log("INTEGER -> "+codes[c.getFinalType(tokenTypes.INTEGER,tokenTypes.INTEGER)]);
+console.log("REAL -> "+codes[c.getFinalType(tokenTypes.INTEGER,tokenTypes.REAL)]);
+console.log("STRING -> "+codes[c.getFinalType(tokenTypes.INTEGER,tokenTypes.STRING)]);
+console.log("CHAR-> "+codes[c.getFinalType(tokenTypes.INTEGER,tokenTypes.CHAR)]);
 console.log("\n\n************************************************************");
 console.log("REAL VARTYPES RESULT");
 console.log("************************************************************");
-console.log("INTEGER -> "+codes[c.getFinalType(operandCodes.REAL,operandCodes.INTEGER)]);
-console.log("REAL -> "+codes[c.getFinalType(operandCodes.REAL,operandCodes.REAL)]);
-console.log("STRING -> "+codes[c.getFinalType(operandCodes.REAL,operandCodes.STRING)]);
+console.log("INTEGER -> "+codes[c.getFinalType(tokenTypes.REAL,tokenTypes.INTEGER)]);
+console.log("REAL -> "+codes[c.getFinalType(tokenTypes.REAL,tokenTypes.REAL)]);
+console.log("STRING -> "+codes[c.getFinalType(tokenTypes.REAL,tokenTypes.STRING)]);
 
 console.log("\n\n************************************************************");
 console.log("STRING VARTYPES RESULT");
 console.log("************************************************************");
-console.log("INTEGER -> "+codes[c.getFinalType(operandCodes.STRING,operandCodes.INTEGER)]);
-console.log("REAL -> "+codes[c.getFinalType(operandCodes.STRING,operandCodes.REAL)]);
-console.log("STRING -> "+codes[c.getFinalType(operandCodes.STRING,operandCodes.STRING)]);
-console.log("CHAR-> "+codes[c.getFinalType(operandCodes.STRING,operandCodes.CHAR)]);
+console.log("INTEGER -> "+codes[c.getFinalType(tokenTypes.STRING,tokenTypes.INTEGER)]);
+console.log("REAL -> "+codes[c.getFinalType(tokenTypes.STRING,tokenTypes.REAL)]);
+console.log("STRING -> "+codes[c.getFinalType(tokenTypes.STRING,tokenTypes.STRING)]);
+console.log("CHAR-> "+codes[c.getFinalType(tokenTypes.STRING,tokenTypes.CHAR)]);
 
 console.log("\n\n************************************************************");
 console.log("CHAR VARTYPES RESULT");
 console.log("************************************************************");
 
-console.log("INTEGER -> "+codes[c.getFinalType(operandCodes.CHAR,operandCodes.INTEGER)]);
-console.log("STRING -> "+codes[c.getFinalType(operandCodes.CHAR,operandCodes.STRING)]);
-console.log("CHAR-> "+codes[c.getFinalType(operandCodes.CHAR,operandCodes.CHAR)]);
+console.log("INTEGER -> "+codes[c.getFinalType(tokenTypes.CHAR,tokenTypes.INTEGER)]);
+console.log("STRING -> "+codes[c.getFinalType(tokenTypes.CHAR,tokenTypes.STRING)]);
+console.log("CHAR-> "+codes[c.getFinalType(tokenTypes.CHAR,tokenTypes.CHAR)]);
 
 console.log("\n\n************************************************************");
 console.log("BOOLEAN VARTYPES RESULT");
 console.log("************************************************************");
 
-console.log("INTEGER -> "+codes[c.getFinalType(operandCodes.BOOLEAN,operandCodes.BOOLEAN)]);
+console.log("INTEGER -> "+codes[c.getFinalType(tokenTypes.BOOLEAN,tokenTypes.BOOLEAN)]);
 

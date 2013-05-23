@@ -1,5 +1,4 @@
-var vartypeCodes=require('../compatibility/vartype_codes'),
-tokenTypes=require('./token_types'),
+var tokenTypes=require('./token_types'),
 comp=require('../compatibility/binary_comp').binComp,
 prio= require('./priorities'),
 Token=require('../token');
@@ -14,13 +13,6 @@ var ops={
 	"||": logicOr,
 	"&&": logicAnd
 };
-//converter o código tokenType em código binário de tipo de variável
-var typeToCode ={};
-typeToCode[tokenTypes.INTEGER]=vartypeCodes.INTEGER;
-typeToCode[tokenTypes.REAL]=vartypeCodes.REAL;
-typeToCode[tokenTypes.STRING]=vartypeCodes.STRING;
-typeToCode[tokenTypes.CHAR]=vartypeCodes.CHAR;
-typeToCode[tokenTypes.BOOLEAN]=vartypeCodes.BOOLEAN;
 
 var finalType={};
 
@@ -42,19 +34,6 @@ module.exports.logicalOps ={
 		return new Token(tokenTypes.BOOLEAN, result);
 	}
 };
-
-
-
-//Converte o código do tokenType em código binário do tipo de variável
-function tokenTypeToVarType(tokenType){
-	return typeToCode[tokenType];
-}
-
-function getFinalType(token1, token2){
-	var type1 = tokenTypeToVarType(token1.type_);
-	var type2 = tokenTypeToVarType(token2.type_);
-	return comp.getFinalType(type1, type2);
-}
 
 function checkCompatibility(token1, token2, operatorToken){
 	return comp.checkCompatibility(token1.type_, token2.type_, operatorToken.value_);

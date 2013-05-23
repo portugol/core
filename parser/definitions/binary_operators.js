@@ -1,5 +1,4 @@
-var vartypeCodes=require('../compatibility/vartype_codes'),
-tokenTypes=require('./token_types'),
+var tokenTypes=require('./token_types'),
 comp=require('../compatibility/binary_comp').binComp,
 Token=require('../token');
 
@@ -16,13 +15,6 @@ var ops={
 	"&": bitwiseAnd,
 	"^": bitwiseXor
 };
-//converter o código tokenType em código binário de tipo de variável
-var typeToCode ={};
-typeToCode[tokenTypes.INTEGER]=vartypeCodes.INTEGER;
-typeToCode[tokenTypes.REAL]=vartypeCodes.REAL;
-typeToCode[tokenTypes.STRING]=vartypeCodes.STRING;
-typeToCode[tokenTypes.CHAR]=vartypeCodes.CHAR;
-typeToCode[tokenTypes.BOOLEAN]=vartypeCodes.BOOLEAN;
 
 var finalType={};
 
@@ -44,23 +36,23 @@ module.exports.binaryOps ={
 		//guarda o resultado da operação
 		var result =func(value1,value2);
 
-		if(finalType==vartypeCodes.INTEGER){
+		if(finalType==tokenTypes.INTEGER){
 			result=parseInt(result,10);
 			return new Token(tokenTypes.INTEGER, result);
 		}
-		if(finalType==vartypeCodes.REAL){
+		if(finalType==tokenTypes.REAL){
 			result=parseFloat(result);
 			return new Token(tokenTypes.REAL, result);
 		}
-		if(finalType==vartypeCodes.CHAR){
+		if(finalType==tokenTypes.CHAR){
 			result=String.fromCharCode(result);
 			return new Token(tokenTypes.CHAR, result);
 		}
-		if(finalType==vartypeCodes.STRING){
+		if(finalType==tokenTypes.STRING){
 			result=result.toString();
 			return new Token(tokenTypes.STRING, result);
 		}
-		if(finalType==vartypeCodes.BOOLEAN){
+		if(finalType==tokenTypes.BOOLEAN){
 			return new Token(tokenTypes.BOOLEAN, result);
 		}
 	}
@@ -68,28 +60,22 @@ module.exports.binaryOps ={
 
 
 function convertToValue(token, finalType){
-	if(finalType==vartypeCodes.INTEGER){
+	if(finalType==tokenTypes.INTEGER){
 		return getIntValue(token);
 	}
-	if(finalType==vartypeCodes.REAL){
+	if(finalType==tokenTypes.REAL){
 		return getRealValue(token);
 	}
-	if(finalType==vartypeCodes.CHAR){
+	if(finalType==tokenTypes.CHAR){
 		return getIntValue(token);
 	}
-	if(finalType==vartypeCodes.STRING){
+	if(finalType==tokenTypes.STRING){
 		return token.value_;
 	}
 }
-//Converte o código do tokenType em código binário do tipo de variável
-function tokenTypeToVarType(tokenType){
-	return typeToCode[tokenType];
-}
 
 function getFinalType(token1, token2){
-	var type1 = tokenTypeToVarType(token1.type_);
-	var type2 = tokenTypeToVarType(token2.type_);
-	return comp.getFinalType(type1, type2);
+	return comp.getFinalType(token1.type_, token2.type_);
 }
 
 function checkCompatibility(token1, token2, operatorToken){

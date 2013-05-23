@@ -1,4 +1,4 @@
-var types=require('../compatibility/vartype_codes');
+var tokenTypes=require('./token_types');
 module.exports = [
 	{
 		'id': 1,
@@ -30,7 +30,7 @@ module.exports = [
 		'name': "cosine",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 5,
@@ -38,7 +38,7 @@ module.exports = [
 		'name': "tangent",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 6,
@@ -46,7 +46,7 @@ module.exports = [
 		'name': "arcsine",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 7,
@@ -54,7 +54,7 @@ module.exports = [
 		'name': "arccosine",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 8,
@@ -62,7 +62,7 @@ module.exports = [
 		'name': "arctangent",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 9,
@@ -70,7 +70,7 @@ module.exports = [
 		'name': "square root",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 10,
@@ -78,7 +78,7 @@ module.exports = [
 		'name': "logarithm",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 11,
@@ -86,7 +86,7 @@ module.exports = [
 		'name': "absolute value",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 12,
@@ -94,7 +94,7 @@ module.exports = [
 		'name': "round up",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 13,
@@ -102,7 +102,7 @@ module.exports = [
 		'name': "round down",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 14,
@@ -110,7 +110,7 @@ module.exports = [
 		'name': "round",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 15,
@@ -118,7 +118,7 @@ module.exports = [
 		'name': 'exponential',
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	},
 	{
 		'id': 16,
@@ -126,7 +126,7 @@ module.exports = [
 		'name': "pythagorean theorem",
 		'type': 'function',
 		'params': 2,
-		'paramTypes': [types.NUMBER,types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER,tokenTypes.NUMBER]
 	},
 	{
 		'id': 17,
@@ -148,6 +148,6 @@ module.exports = [
 		'name': "sine",
 		'type': 'function',
 		'params': 1,
-		'paramTypes': [types.NUMBER]
+		'paramTypes': [tokenTypes.NUMBER]
 	}
 ];

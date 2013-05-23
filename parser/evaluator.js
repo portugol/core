@@ -1,6 +1,5 @@
 var Parser= require('./expression'),
 	tokenTypes=require('./definitions/token_types'),
-	vartypeCodes=require('./compatibility/vartype_codes'),
 	comp=require('./compatibility/binary_comp').binComp,
 	binLogicOps=require('./definitions/binary_logical_operators').logicalOps,
 	binOps=require('./definitions/binary_operators').binaryOps,
@@ -13,31 +12,6 @@ var Parser= require('./expression'),
 
 var Evaluator = function(isArgument){
 	this.isArgument = isArgument || false;
-};
-
-
-//guardar códigos binários dos tipos de variável
-var INTEGER = vartypeCodes.INTEGER;
-var	REAL    = vartypeCodes.REAL;
-var	STRING  = vartypeCodes.STRING;
-var	CHAR    = vartypeCodes.CHAR;
-var	BOOLEAN = vartypeCodes.BOOLEAN;
-var	NULL    = vartypeCodes.NULL;
-var	ALL     = vartypeCodes.ALL;
-var	NUMBER  = vartypeCodes.NUMBER;
-
-//converter o código tokenType em código binário de tipo de variável
-var typeToCode ={};
-typeToCode[tokenTypes.INTEGER]=INTEGER;
-typeToCode[tokenTypes.REAL]=REAL;
-typeToCode[tokenTypes.STRING]=STRING;
-typeToCode[tokenTypes.CHAR]=CHAR;
-typeToCode[tokenTypes.BOOLEAN]=BOOLEAN;
-
-
-//Converte o código do tokenType em código binário do tipo de variável
-Evaluator.prototype.tokenTypeToVarType = function(tokenType){
-	return typeToCode[tokenType];
 };
 
 Evaluator.prototype.evaluate = function(postfixstack){
@@ -169,9 +143,7 @@ Evaluator.prototype.checkCompatibility = function(token1, operator, token2){
 };
 
 Evaluator.prototype.getFinalType = function(token1, token2){
-	var type1 = this.tokenTypeToVarType(token1.type_);
-	var type2 = this.tokenTypeToVarType(token2.type_);
-	return comp.getFinalType(type1, type2);
+	return comp.getFinalType(type1.type_, type2.type_);
 };
 
 Evaluator.prototype.throwError = function(msg){
