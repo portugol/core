@@ -7,11 +7,14 @@ var Parser= require('./expression'),
 	rightUnaryOps=require('./definitions/right_unary_operators').rightUnaryOps,
 	Debug = require('./debug/debug'),
 	mathfuncs=require('./definitions/math_funcs').mathFuncs,
-	Evaluator=require('./evaluator');
+	Evaluator=require('./evaluator'),
+	Var= require('../core-master/lib/var'),
+	Token= require('./token');
 
 
-var Evaluator = function(isArgument){
+var Evaluator = function(memory, isArgument){
 	this.isArgument = isArgument || false;
+	this.memory = memory;
 };
 
 Evaluator.prototype.evaluate = function(postfixstack){
@@ -21,6 +24,8 @@ Evaluator.prototype.evaluate = function(postfixstack){
 	this.resultToken={};
 	this.token1={};
 	this.token2={};
+
+	this.checkMemoryVars(this.postfixstack,this.memory);
 
 	while(this.postfixstack.length>0){
 		//o shift remove o primeiro elemento da pilha
@@ -100,7 +105,7 @@ Evaluator.prototype.evaluate = function(postfixstack){
 				this.throwError("Erro de paridade");
 			}
 			try{
-				var e = new Evaluator(true);
+				var e = new Evaluator(this.memory,true);
 				var params=e.evaluate(this.token1.parameterStack);
 				this.resultToken=mathfuncs.calculate(params,this.item);
 			}
@@ -108,6 +113,26 @@ Evaluator.prototype.evaluate = function(postfixstack){
 				this.throwError(err);
 			}
 			this.tempstack.push(this.resultToken);
+		}
+		else if(this.item.type_==tokenTypes.ASSIGN){
+			this.token2=this.tempstack.pop();
+			this.token1=this.tempstack.pop();
+			//procura a variável pelo nome na memória
+			var v = this.memory.getVar(this.token1.value_);
+			//se a variável não existir na memória
+			if(v===undefined){
+				//cria a variável (depois mudar o nível da variável!!!!!!!!!)
+				this.memory.addVar(new Var(this.token1.value_,this.token1.type_,this.token2.value_,0));
+				return this.token2.value_;
+			}
+			//se a variável já existe e vai receber o mesmo tipo de dados
+			if(v.type_==this.token2.type_){
+				v.value_=this.token2.value_; //actualiza o valor da variável
+				return this.token2.value_;
+			}
+			else{
+				this.throwError("nao e possivel a atribuir o valor "+this.token2.value_+" a variavel "+v.name_);
+			}
 		}
 	}
 	if(this.isArgument){
@@ -133,9 +158,31 @@ Evaluator.prototype.evaluate = function(postfixstack){
 	}
 };
 
+Evaluator.prototype.checkMemoryVars = function(stack,mem){
+	var i=0;
+	//se o último item da stack for do tipo tipo atribuição então o primeiro item da stack é
+	//a variável que recebe o valor da operação
+	if(stack[stack.length-1].type_==tokenTypes.ASSIGN){
+		i=1; //salta primeiro item da stack
+	}
+	for(i; i<stack.length; i++){
+		if(stack[i].type_==tokenTypes.VAR){
+			var v = mem.getVar(stack[i].value_);
+			//se a variável existe em memória substitui pelo seu valor.
+			if(v!==undefined){
+				stack[i]=new Token(v.type_,v.value_);
+				console.log(stack[i]);
+			}
+			else{
+				this.throwError("A variavel "+stack[i].value_+" nao esta definida");
+			}
+		}
+	}
+};
+
 Evaluator.prototype.isntOperator= function(){
 	var t=this.item.type_;
-	return (t!=tokenTypes.BINARYOP) && (t!=tokenTypes.UNARY_LEFT_OP) &&  (t!=tokenTypes.UNARY_RIGHT_OP) &&(t!=tokenTypes.BINARY_LOGIC_OP) && (t!=tokenTypes.MATHFUNC);
+	return (t!=tokenTypes.BINARYOP) && (t!=tokenTypes.UNARY_LEFT_OP) &&  (t!=tokenTypes.UNARY_RIGHT_OP) &&(t!=tokenTypes.BINARY_LOGIC_OP) && (t!=tokenTypes.MATHFUNC) &&  (t!=tokenTypes.ASSIGN);
 };
 
 Evaluator.prototype.checkCompatibility = function(token1, operator, token2){

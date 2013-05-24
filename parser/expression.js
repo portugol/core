@@ -24,8 +24,8 @@
 	var MATHFUNC_CALL = 1<< 16;
 	var PRIMARY      = (NUMBER | TEXT | BOOLEAN);
 
-	var Expression = function(isArgument, isDebug, nodeType_){
-		this.argumentExpected = isArgument || false;
+	var Expression = function(nodeType_, isArgument, isDebug){
+		this.isArgument = isArgument || false;
 		this.isDebug = isDebug || false;
 		this.nodeType_=nodeType_;
 	};
@@ -47,7 +47,8 @@
 	};
 
 	//var opersStack=1;
-	Expression.prototype.toPostfix = function(expr){
+	Expression.prototype.toPostfix = function(expr,nodeType_){
+		this.nodeType_=nodeType_||this.nodeType_;
 		this.expr=expr;
 		this.errormsg="";
 		this.pos=0;
@@ -60,7 +61,6 @@
 		this.operStack = [];
 		this.postfixStack=[];
 		this.parameterStack=[];
-
 		
 		//SE A EXPRESSAO É NULA (tamanho=0)
 		if(expr.length===0){
@@ -158,7 +158,7 @@
 					this.throwError(this.pos, "Nao e esperado um numero");
 					//throw new Error("Nao e esperado um numero");
 				}
-				if(this.argumentExpected){
+				if(this.isArgument){
 					expected = (ARITHMETICOP| RPAREN | COMMA | FACT | LOGICOP);
 				}
 				else{
@@ -208,7 +208,7 @@
 					//guarda argumento da funçao
 					var argument=this.expr.substring(oldpos,this.pos-1);
 					//avaliar recursivamente a expressão do argumento
-					this.parameterStack= new Expression(true).toPostfix(argument);
+					this.parameterStack= new Expression(undefined,true).toPostfix(argument);
 
 					//cria o token do tipo argumento que guarda a stack com os parâmetros da funçao
 					this.tokensymbol="argument";
@@ -230,7 +230,7 @@
 					//throw new Error("Nao e esperado um parentesis direito");
 				}
 				else{
-					if(this.argumentExpected){
+					if(this.isArgument){
 						expected = (ARITHMETICOP | LOGICOP | RPAREN | FACT | COMMA);
 					}
 					//expectedParameter=NOPARAMETER; //já não são esperados parâmetros
@@ -279,7 +279,7 @@
 					this.throwError(this.pos,"Nao e esperado um caracter");
 				}
 				this.addOperand(tokenTypes.CHAR);
-				if(this.argumentExpected){
+				if(this.isArgument){
 					expected = (ARITHMETICOP | LOGICOP | RPAREN | COMMA);
 					//expected = (ARITHMETICOP | RPAREN | COMMA);
 				}
@@ -294,7 +294,7 @@
 					//throw new Error("Nao e esperada uma string");
 				}
 				this.addOperand(tokenTypes.STRING);
-				if(this.argumentExpected){
+				if(this.isArgument){
 					expected = (ARITHMETICOP | LOGICOP | RPAREN | COMMA);
 					//expected = (ARITHMETICOP | RPAREN | COMMA);
 				}
@@ -327,7 +327,7 @@
 								this.addOperand(tokenTypes.BOOLEAN);
 								expected = (LOGICOP | RPAREN);
 								//se neste momento é um argumento é esperada também uma vírgula
-								if(this.argumentExpected){
+								if(this.isArgument){
 									expected = (LOGICOP | RPAREN | COMMA);
 								}
 							}
@@ -338,7 +338,7 @@
 							}
 							//o subtipo não é boolean nem null
 							//se neste momento está a ser avaliado um argumento é esperada  ainda uma vírgula
-							else if(this.argumentExpected){
+							else if(this.isArgument){
 								this.addOperand(tokenTypes.REAL);
 								expected = (ARITHMETICOP | LOGICOP | RPAREN | COMMA);
 							}
@@ -371,6 +371,9 @@
 				}
 			}
 			else if(this.isAssign()){
+				if(this.isArgument){
+					this.throwError("Nao e permitido fazer atribuicao dentro do argumento de funcoes");
+				}
 				if(this.nodeType_!=nodeTypes.PROCESS){
 					this.throwError("Nao e permitido fazer atribuicao");
 				}
@@ -392,7 +395,7 @@
 		} //FIM DO WHILE
 		//descarrega os operadores restantes para a pilha pos fixa
 		this.popAll();
-		if(this.argumentExpected){
+		if(this.isArgument){
 			this.removeCommas();
 		}
 
@@ -463,7 +466,7 @@
 	};
 
 	Expression.prototype.throwError = function(column, msg){
-		if(msg===undefined && column!=undefined){
+		if(msg===undefined && column!==undefined){
 			this.errormsg = "parse error: "+ column;
 			throw new Error(this.errormsg);
 		}

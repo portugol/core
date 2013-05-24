@@ -3,10 +3,12 @@ var Token = require('./token');
 var tokenTypes= require('./definitions/token_types');
 var comp=require('./compatibility/binary_comp').binComp;
 var binops=require('./definitions/binary_operators').binops;
-var operandCodes=require('./compatibility/vartype_codes');
 var Evaluator = require('./evaluator');
 var unaryLeftComp=require('./compatibility/unary_left_comp').unaryLeftComp;
 var u=require('./compatibility/unary_right_comp').unaryRightComp;
+var nodeTypes= require('../core-master/lib/nodes/definition');
+var Memory= require('../core-master/lib/memory');
+var Var= require('../core-master/lib/var');
 //p.parse("2*(1+sin(0+0))/3"); OK 
 //p.parse("a&&b||c&&d"); OK
 //p.parse("!(a&&c||b&&a&&!c)"; OK
@@ -34,17 +36,28 @@ var u=require('./compatibility/unary_right_comp').unaryRightComp;
 //TESTES DE OPERAçÕES
 //var expr="'a'-'Ϩ'"; o caracter resultante é '\u0000' -> VER O QUE FAZER
 
- 
+
 try{
-	var p = new Expression(true,true);
-	var expr="2*cos(PI/2)";
-	var stack = p.toPostfix(expr);
-	console.log(stack[1].parameterStack);
+	var m = new Memory();
+	var v = new Var("a",tokenTypes.INTEGER,1,0);
+	m.addVar(v);
+
+	var p = new Expression(nodeTypes.PROCESS,false,false);
+	var expr="a=sin(a-1)";
+
+	//expr="func(1,(2,1))";
+	//PERMITIR OU NAO PERMITIR?????
+	//expr="func(1,(2,1))";
 	
-	var e = new Evaluator();
+	var stack = p.toPostfix(expr);
+	var e = new Evaluator(m);
+	console.log("MEMORIA ANTES:");
+	console.log(m);
 	console.log("RESULT:");
 	console.log(e.evaluate(stack));
-	console.log(2*Math.cos(Math.PI/2));
+	console.log("MEMORIA DEPOIS");
+	console.log(m);
+	//console.log(2*Math.cos(Math.PI/2));*/
 }
 catch(err){
 	console.log(err.message);

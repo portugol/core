@@ -5,6 +5,7 @@
   "dependencies": {
     "prompt": "*",
     "socket.io": "*",
-    "ecstatic": "*"
+    "ecstatic": "*",
+    "parserp" : "http://github.com/portugol/parser"
   }
 }
