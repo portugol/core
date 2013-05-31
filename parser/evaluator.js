@@ -9,7 +9,8 @@ var Parser= require('./expression'),
 	mathfuncs=require('./definitions/math_funcs').mathFuncs,
 	Evaluator=require('./evaluator'),
 	Var= require('../core-master/lib/var'),
-	Token= require('./token');
+	Token= require('./token'),
+	limits=require('./definitions/limits').limits;
 
 
 var Evaluator = function(memory, isArgument){
@@ -122,7 +123,7 @@ Evaluator.prototype.evaluate = function(postfixstack){
 			//se a variável não existir na memória
 			if(v===undefined){
 				//cria a variável (depois mudar o nível da variável!!!!!!!!!)
-				this.memory.addVar(new Var(this.token1.value_,this.token1.type_,this.token2.value_,0));
+				this.memory.addVar(new Var(this.token1.value_,this.token2.type_,this.token2.value_,0));
 				return this.token2.value_;
 			}
 			//se a variável já existe e vai receber o mesmo tipo de dados
@@ -171,7 +172,6 @@ Evaluator.prototype.checkMemoryVars = function(stack,mem){
 			//se a variável existe em memória substitui pelo seu valor.
 			if(v!==undefined){
 				stack[i]=new Token(v.type_,v.value_);
-				console.log(stack[i]);
 			}
 			else{
 				this.throwError("A variavel "+stack[i].value_+" nao esta definida");

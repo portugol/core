@@ -150,7 +150,7 @@
 					this.throwError(this.pos, "Nao e esperado um operador logico");
 				}
 				this.addOperator(tokenTypes.BINARY_LOGIC_OP);
-				expected=( PRIMARY | LPAREN | VAR | NOT);
+				expected=( PRIMARY | LPAREN | VAR | NOT | SIGNAL);
 				//expected=( BOOLEAN | LPAREN | VAR | NOT);	
 			}
 			else if(this.isNumber()){
@@ -214,7 +214,7 @@
 					this.tokensymbol="argument";
 					this.tokenprio=prio.VALUE;
 					this.addOperand(tokenTypes.ARGUMENT);
-					expected = (ARITHMETICOP | LOGICOP | RPAREN) ;
+					expected = (ARITHMETICOP | LOGICOP | RPAREN | FACT) ;
 				}
 				//****************************************************************
 				// É UM PARENTESIS  ESQUERDO SIMPLES

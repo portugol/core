@@ -255,7 +255,7 @@ module.exports.binComp = {
 			operandCode=tokenTypes.BOOLEAN;
 			break;
 			default:
-			throw Error("tipo invalido");
+			throw Error("tipo invalid");
 		}
 
 

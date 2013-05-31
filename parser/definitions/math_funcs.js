@@ -1,8 +1,9 @@
 var tokenTypes=require('./token_types'),
 binComp=require('../compatibility/binary_comp').binComp,
 comp=require('../compatibility/unary_left_comp').unaryLeftComp,
-Token=require('../token');
-dictionary=require('./dictionary');
+Token=require('../token'),
+dictionary=require('./dictionary'),
+limits=require('./limits').limits;
 
 var finalType={};
 module.exports.mathFuncs ={
@@ -50,9 +51,6 @@ module.exports.mathFuncs ={
 			result =value1.toString();
 			return new Token(tokenTypes.STRING, result);
 		}
-		if(finalType==tokenTypes.BOOLEAN){
-			return new Token(tokenTypes.BOOLEAN, result);
-		}
 	}
 };
 
@@ -61,24 +59,10 @@ function checkCompatibility(token1, operatorToken){
 }
 
 function getIntValue(token){
-	var str=token.value_.toString();
-	str=str.toLowerCase();
-	//se for notação científica devolve o próprio valor
-	if(isScientificNotation()){
-		return token.value_;
-	}
 	if(token.type_==tokenTypes.CHAR){
 		return token.value_.charCodeAt(0);
 	}
 	return parseInt(token.value_,10);
-}
-
-function isScientificNotation(str){
-	var ePos=str.indexOf("e");
-	if(ePos!=-1){
-		return true;
-	}
-	return false;
 }
 
 function getRealValue(token){

@@ -1,6 +1,7 @@
 var tokenTypes=require('./token_types'),
 comp=require('../compatibility/binary_comp').binComp,
-Token=require('../token');
+Token=require('../token'),
+limits=require('./limits').limits;
 
 var ops={
 	"+": add,
@@ -35,7 +36,6 @@ module.exports.binaryOps ={
 
 		//guarda o resultado da operação
 		var result =func(value1,value2);
-
 		if(finalType==tokenTypes.INTEGER){
 			result=parseInt(result,10);
 			return new Token(tokenTypes.INTEGER, result);
@@ -51,9 +51,6 @@ module.exports.binaryOps ={
 		if(finalType==tokenTypes.STRING){
 			result=result.toString();
 			return new Token(tokenTypes.STRING, result);
-		}
-		if(finalType==tokenTypes.BOOLEAN){
-			return new Token(tokenTypes.BOOLEAN, result);
 		}
 	}
 };

@@ -1,7 +1,8 @@
 var tokenTypes=require('./token_types'),
 binComp=require('../compatibility/binary_comp').binComp,
 comp=require('../compatibility/unary_left_comp').unaryLeftComp,
-Token=require('../token');
+Token=require('../token'),
+limits=require('./limits').limits;
 
 var ops={
 	"!": logicNot,

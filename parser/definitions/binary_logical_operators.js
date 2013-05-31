@@ -1,7 +1,8 @@
 var tokenTypes=require('./token_types'),
 comp=require('../compatibility/binary_comp').binComp,
 prio= require('./priorities'),
-Token=require('../token');
+Token=require('../token'),
+limits=require('./limits').limits;
 
 var ops={
 	"==": equals,

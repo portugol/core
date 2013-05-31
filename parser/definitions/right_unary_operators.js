@@ -1,7 +1,8 @@
 var tokenTypes=require('./token_types'),
 binComp=require('../compatibility/binary_comp').binComp,
 comp=require('../compatibility/unary_right_comp').unaryRightComp,
-Token=require('../token');
+Token=require('../token'),
+limits=require('./limits').limits;
 
 var ops={
 	"!": factorial
@@ -40,9 +41,6 @@ module.exports.rightUnaryOps ={
 		if(finalType==tokenTypes.STRING){
 			result =value1.toString();
 			return new Token(tokenTypes.STRING, result);
-		}
-		if(finalType==tokenTypes.BOOLEAN){
-			return new Token(tokenTypes.BOOLEAN, result);
 		}
 	}
 };
