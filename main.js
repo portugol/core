@@ -27,7 +27,7 @@ console.log(g1.validate());
 */
 
 
-var static_server = ecstatic(__dirname + '/client');
+var static_server = ecstatic(__dirname + '/public');
 http_server.on('request', static_server);
 
 http_server.listen(8080, function(){
