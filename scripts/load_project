@@ -1,4 +1,0 @@
-#!/bin/bash
-git clone https://github.com/portugol/ide -b ide_execution_poc
-rm -rf public
-mv ide public
