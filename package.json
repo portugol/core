@@ -5,6 +5,7 @@
   "dependencies": {
     "prompt": "*",
     "socket.io": "*",
-    "ecstatic": "*"
+    "ecstatic": "*",
+    "core-parser": "git://github.com/portugol/core-parser.git"
   }
 }
