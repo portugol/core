@@ -44,6 +44,7 @@ var parser = new Evaluator();
 /////////////////////////////////////////// testes operacoes bitwise + de 32 bits  number.MAX_VALUE number.MIN_VALUE
 /////////////////////////////////////////// 2*cos(PI/2)
 /////////////////////////////////////////// Potenciação valores com e overflow
+/////////////////////////////////////////// 2/0
 //
 describe(' Soma (+) ', function (){
 	describe(' assert ', function (){
@@ -350,295 +351,281 @@ describe(' Multiplicação (*) ', function (){
 
 })
 
-// describe(' Divisão (/) ', function (){
-// 	describe(' assert ', function (){
+describe(' Divisão (/) ', function (){
+	describe(' assert ', function (){
 
-// 	    it('.strictEqual()', function () {
-// 	    	assert.strictEqual(2, parser.evaluateStringExpr("732 / 342"), 'Esperado valor 2 da divisão (divisão de inteiros)');
-// 	    	assert.strictEqual(0.9062229370283311, parser.evaluateStringExpr("293 / 323.32"), 'Esperado valor 0.9062229370283311 da divisão (divisão de inteiro com real)');
-// 	    	assert.strictEqual(0.025997904613609214, parser.evaluateStringExpr("243.92332 / 9382.4223"), 'Esperado valor 0.025997904613609214 da divisão (divisão de reais)');  																//3196
-// 	    	//assert.strictEqual(actual, expected, message);
-// 	    })
+	    it('.strictEqual()', function () {
+	    	assert.strictEqual(2, parser.evaluateStringExpr("732 / 342"), 'Esperado valor 2 da divisão (divisão de inteiros)');
+	    	assert.strictEqual(0.9062229370283311, parser.evaluateStringExpr("293 / 323.32"), 'Esperado valor 0.9062229370283311 da divisão (divisão de inteiro com real)');
+	    	assert.strictEqual(0.025997904613609214, parser.evaluateStringExpr("243.92332 / 9382.4223"), 'Esperado valor 0.025997904613609214 da divisão (divisão de reais)');
+	    })
 
-// 	    it('.typeOf()', function (){
-// 	    	assert.typeOf( parser.evaluateStringExpr("732 / 342"), 'number', 'Esperado number da divisão (divisão de inteiros)');
-// 	    	assert.typeOf( parser.evaluateStringExpr("293 / 323.32"), 'number', 'Esperado number da divisão (divisão de inteiro com real)');
-// 	    	assert.typeOf( parser.evaluateStringExpr("243.92332 / 9382.4223"), 'number' ,'Esperado number da divisão (divisão de reais)');  	
-// 	    })
+	    it('.typeOf()', function (){
+	    	assert.typeOf( parser.evaluateStringExpr("732 / 342"), 'number', 'Esperado number da divisão (divisão de inteiros)');
+	    	assert.typeOf( parser.evaluateStringExpr("293 / 323.32"), 'number', 'Esperado number da divisão (divisão de inteiro com real)');
+	    	assert.typeOf( parser.evaluateStringExpr("243.92332 / 9382.4223"), 'number' ,'Esperado number da divisão (divisão de reais)');  	
+	    })
 
-//     	it('.throw()', function (){
-//     		assert.throws(function() {return parser.evaluateStringExpr("89723 / TRUE"); },'Símbolos incompatíveis (divisão de inteiro com lógico)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("5293 / \"ಠಡ嬛ၧkd\""); },'Símbolos incompatíveis (divisão de inteiro com texto)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("'c' / 3292"); },'Símbolos incompatíveis (divisão de caracter com inteiro)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("3229.4209 / TRUE"); },'Símbolos incompatíveis (divisão de real com lógico)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("32879.90 / \"t柹鵛瞣éट\""); },'Símbolos incompatíveis (divisão de real com texto)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("3322.34029 / '吃'"); },'Símbolos incompatíveis (divisão de real com caracter)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("TRUE / FALSE"); },'Símbolos incompatíveis (divisão de lógicos)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("TRUE / \"p02姚ń级\""); },'Símbolos incompatíveis (divisão de lógico com texto)');
-//     	    assert.throws(function() {return parser.evaluateStringExpr("TRUE / 'უ'"); },'Símbolos incompatíveis (divisão de lógico com caracter)');
-//     	    assert.throws(function() {return parser.evaluateStringExpr("'ಯ' / '౼'"); },'Símbolos incompatíveis (divisão de caracter com caracter)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("'ᐤ' / \"t3쥯꾟3\""); },'Símbolos incompatíveis (divisão de caracter com texto)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" / \"ኺ0~cᶎओ\""); },'Símbolos incompatíveis (divisão de textos)');
-//     		//assert.throws(function() {return parser.evaluateStringExpr('5 / ('); },'parse error [column 5]: unmatched "()"');
-// 	    })
+    	it('.throw()', function (){
+    		assert.throws(function() {return parser.evaluateStringExpr("89723 / TRUE"); },'parse error [column 9]: Não e esperado um boolean');
+    		assert.throws(function() {return parser.evaluateStringExpr("5293 / \"ಠಡ嬛ၧkd\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("'c' / 3292"); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("3229.4209 / TRUE"); },'parse error [column 13]: Não e esperado um boolean');
+    		assert.throws(function() {return parser.evaluateStringExpr("32879.90 / \"t柹鵛瞣éट\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("3322.34029 / '吃'"); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("TRUE / FALSE"); },'parse error [column 6]: Nao e esperado um operador aritmetico');
+    		assert.throws(function() {return parser.evaluateStringExpr("TRUE / \"p02姚ń级\""); },'parse error [column 6]: Nao e esperado um operador aritmetico');
+    	    assert.throws(function() {return parser.evaluateStringExpr("TRUE / 'უ'"); },'parse error [column 6]: Nao e esperado um operador aritmetico');
+    	    assert.throws(function() {return parser.evaluateStringExpr("'ಯ' / '౼'"); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("'ᐤ' / \"t3쥯꾟3\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" / \"ኺ0~cᶎओ\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+	    })
 
-// 	})
+	})
 
-// 	describe(' expect ', function (){
-//   		it('.equal()', function (){
-// 	    	expect(parser.evaluateStringExpr("732 / 342"), 'Esperado valor 2 da divisão (divisão de inteiros)').to.equal(2);
-// 	    	expect(parser.evaluateStringExpr("293 / 323.32"), 'Esperado valor 0.9062229370283311 da divisão (divisão de inteiro com real)').to.equal(0.9062229370283311);;
-// 	    	expect(parser.evaluateStringExpr("243.92332 / 9382.4223"), 'Esperado valor 0.025997904613609214 da divisão (divisão de reais)').to.equal(0.025997904613609214);
-// 	    })
+	describe(' expect ', function (){
+  		it('.equal()', function (){
+	    	expect(parser.evaluateStringExpr("732 / 342"), 'Esperado valor 2 da divisão (divisão de inteiros)').to.equal(2);
+	    	expect(parser.evaluateStringExpr("293 / 323.32"), 'Esperado valor 0.9062229370283311 da divisão (divisão de inteiro com real)').to.equal(0.9062229370283311);;
+	    	expect(parser.evaluateStringExpr("243.92332 / 9382.4223"), 'Esperado valor 0.025997904613609214 da divisão (divisão de reais)').to.equal(0.025997904613609214);
+	    })
 
-//   		it('.typeOf()', function (){
-//   			expect(parser.evaluateStringExpr("732 / 342")).to.be.a('number');
-//   			expect(parser.evaluateStringExpr("293 / 323.32")).to.be.a('number');
-//   			expect(parser.evaluateStringExpr("243.92332 / 9382.4223")).to.be.a('number');		
-//   		})
+  		it('.typeOf()', function (){
+  			expect(parser.evaluateStringExpr("732 / 342")).to.be.a('number');
+  			expect(parser.evaluateStringExpr("293 / 323.32")).to.be.a('number');
+  			expect(parser.evaluateStringExpr("243.92332 / 9382.4223")).to.be.a('number');		
+  		})
 
-//   		it('.throw()', function (){
-//   			expect(function() {return parser.evaluateStringExpr("89723 / TRUE"); }).to.throw('Símbolos incompatíveis (divisão de inteiro com lógico)');
-//   			expect(function() {return parser.evaluateStringExpr("5293 / \"ಠಡ嬛ၧkd\""); }).to.throw('Símbolos incompatíveis (divisão de inteiro com texto)');	
-//   			expect(function() {return parser.evaluateStringExpr("'c' / 3292"); }).to.throw('Símbolos incompatíveis (divisão de caracter com inteiro)');
-//   			expect(function() {return parser.evaluateStringExpr("3229.4209 / TRUE"); }).to.throw('Símbolos incompatíveis (divisão de real com lógico)');
-//   			expect(function() {return parser.evaluateStringExpr("32879.90 / \"t柹鵛瞣éट\""); }).to.throw('Símbolos incompatíveis (divisão de real com texto)');
-//   			expect(function() {return parser.evaluateStringExpr("3322.34029 / '吃'"); }).to.throw('Símbolos incompatíveis (divisão de real com caracter)');
-//   			expect(function() {return parser.evaluateStringExpr("TRUE / FALSE"); }).to.throw('Símbolos incompatíveis (divisão de lógicos)');
-//   			expect(function() {return parser.evaluateStringExpr("TRUE / \"p02姚ń级\""); }).to.throw('Símbolos incompatíveis (divisão de lógico com texto)');
-// 			expect(function() {return parser.evaluateStringExpr("TRUE / 'უ'"); }).to.throw('Símbolos incompatíveis (divisão de lógico com caracter)');
-// 			expect(function() {return parser.evaluateStringExpr("'ಯ' / '౼'"); }).to.throw('Símbolos incompatíveis (divisão de caracter com caracter)');  			
-// 			expect(function() {return parser.evaluateStringExpr("'ᐤ' / \"t3쥯꾟3\""); }).to.throw('Símbolos incompatíveis (divisão de caracter com texto)');
-// 			expect(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" / \"ኺ0~cᶎओ\""); }).to.throw('Símbolos incompatíveis (divisão de textos)');
-//     		//expect(function() {return parser.evaluateStringExpr('5 / ('); }).to.throw();    		
-//   		})
-// 	})
+  		it('.throw()', function (){
+  			expect(function() {return parser.evaluateStringExpr("89723 / TRUE"); }).to.throw('parse error [column 9]: Não e esperado um boolean');
+  			expect(function() {return parser.evaluateStringExpr("5293 / \"ಠಡ嬛ၧkd\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');	
+  			expect(function() {return parser.evaluateStringExpr("'c' / 3292"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  			expect(function() {return parser.evaluateStringExpr("3229.4209 / TRUE"); }).to.throw('parse error [column 13]: Não e esperado um boolean');
+  			expect(function() {return parser.evaluateStringExpr("32879.90 / \"t柹鵛瞣éट\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  			expect(function() {return parser.evaluateStringExpr("3322.34029 / '吃'"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  			expect(function() {return parser.evaluateStringExpr("TRUE / FALSE"); }).to.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+  			expect(function() {return parser.evaluateStringExpr("TRUE / \"p02姚ń级\""); }).to.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			expect(function() {return parser.evaluateStringExpr("TRUE / 'უ'"); }).to.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			expect(function() {return parser.evaluateStringExpr("'ಯ' / '౼'"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');  			
+			expect(function() {return parser.evaluateStringExpr("'ᐤ' / \"t3쥯꾟3\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			expect(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" / \"ኺ0~cᶎओ\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');  		
+  		})
+	})
 
-// 	describe(' should ', function (){
-// 		 it('.equal()', function (){
-// 		 	parser.evaluateStringExpr("732 / 342").should.equal(2, 'Esperado valor 2 da divisão (divisão de inteiros)');
-// 		 	parser.evaluateStringExpr("293 / 323.32").should.equal(0.9062229370283311, 'Esperado valor 0.9062229370283311 da divisão (divisão de inteiro com real)');
-// 		 	parser.evaluateStringExpr("243.92332 / 9382.4223").should.equal(583.9209669999999, 'Esperado valor 583.9209669999999 da divisão (divisão de reais)');
-// 	    })
+	describe(' should ', function (){
+		 it('.equal()', function (){
+		 	parser.evaluateStringExpr("732 / 342").should.equal(2, 'Esperado valor 2 da divisão (divisão de inteiros)');
+		 	parser.evaluateStringExpr("293 / 323.32").should.equal(0.9062229370283311, 'Esperado valor 0.9062229370283311 da divisão (divisão de inteiro com real)');
+		 	parser.evaluateStringExpr("243.92332 / 9382.4223").should.equal(0.025997904613609214, 'Esperado valor 0.025997904613609214 da divisão (divisão de reais)');
+	    })
 
-// 		it('.typeOf()', function (){	
-// 			(parser.evaluateStringExpr("732 / 342")).should.be.a('number');
-// 			(parser.evaluateStringExpr("293 / 323.32")).should.be.a('number');
-// 			(parser.evaluateStringExpr("243.92332 / 9382.4223")).should.be.a('number');
-// 		})
+		it('.typeOf()', function (){	
+			(parser.evaluateStringExpr("732 / 342")).should.be.a('number');
+			(parser.evaluateStringExpr("293 / 323.32")).should.be.a('number');
+			(parser.evaluateStringExpr("243.92332 / 9382.4223")).should.be.a('number');
+		})
 
-// 		it('.throw()', function (){	
-// 			(function() {return parser.evaluateStringExpr("89723 / TRUE"); }).should.throw('Símbolos incompatíveis (divisão de inteiro com lógico)');	
-// 			(function() {return parser.evaluateStringExpr("5293 / \"ಠಡ嬛ၧkd\""); }).should.throw('Símbolos incompatíveis (divisão de inteiro com texto)');
-// 			(function() {return parser.evaluateStringExpr("'c' / 3292"); }).should.throw('Símbolos incompatíveis (divisão de caracter com inteiro)');	
-// 			(function() {return parser.evaluateStringExpr("3229.4209 / TRUE"); }).should.throw('Símbolos incompatíveis (divisão de real com lógico)');
-// 			(function() {return parser.evaluateStringExpr("32879.90 / \"t柹鵛瞣éट\""); }).should.throw('Símbolos incompatíveis (divisão de real com texto)');
-// 			(function() {return parser.evaluateStringExpr("3322.34029 / '吃'"); }).should.throw('Símbolos incompatíveis (divisão de real com caracter)');
-// 			(function() {return parser.evaluateStringExpr("TRUE / FALSE"); }).should.throw('Símbolos incompatíveis (divisão de lógicos)');
-// 			(function() {return parser.evaluateStringExpr("TRUE / \"p02姚ń级\""); }).should.throw('Símbolos incompatíveis (divisão de lógico com texto)');
-// 			(function() {return parser.evaluateStringExpr("TRUE / 'უ'"); }).should.throw('Símbolos incompatíveis (divisão de lógico com caracter)');
-// 			(function() {return parser.evaluateStringExpr("'ಯ' / '౼'"); }).should.throw('Símbolos incompatíveis (divisão de caracter com caracter)');
-// 			(function() {return parser.evaluateStringExpr("'ᐤ' / \"t3쥯꾟3\""); }).should.throw('Símbolos incompatíveis (divisão de caracter com texto)');
-// 			(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" / \"ኺ0~cᶎओ\""); }).should.throw('Símbolos incompatíveis (divisão de textos)');
-// 			//(function() {return parser.evaluateStringExpr('5 * ('); }).should.throw();
-// 			//erro(function() {(parser.evaluateStringExpr('5 * (').should.throw('parse error [column 5]: unmatched "()"');}, 'Esperado');	
-// 		})
+		it('.throw()', function (){	
+			(function() {return parser.evaluateStringExpr("89723 / TRUE"); }).should.throw('parse error [column 9]: Não e esperado um boolean');	
+			(function() {return parser.evaluateStringExpr("5293 / \"ಠಡ嬛ၧkd\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("'c' / 3292"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');	
+			(function() {return parser.evaluateStringExpr("3229.4209 / TRUE"); }).should.throw('parse error [column 13]: Não e esperado um boolean');
+			(function() {return parser.evaluateStringExpr("32879.90 / \"t柹鵛瞣éट\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("3322.34029 / '吃'"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("TRUE / FALSE"); }).should.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			(function() {return parser.evaluateStringExpr("TRUE / \"p02姚ń级\""); }).should.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			(function() {return parser.evaluateStringExpr("TRUE / 'უ'"); }).should.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			(function() {return parser.evaluateStringExpr("'ಯ' / '౼'"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("'ᐤ' / \"t3쥯꾟3\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" / \"ኺ0~cᶎओ\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');  		
+		})
 
-// 	})
+	})
 
-// })
+})
 
-// describe(' Resto da Divisão (%) ', function (){
-// 	describe(' assert ', function (){
+describe(' Resto da Divisão (%) ', function (){
+	describe(' assert ', function (){
 
-// 	    it('.strictEqual()', function () {
-// 	    	assert.strictEqual(0, parser.evaluateStringExpr("7232 % 34232"), 'Esperado valor 7232 da resto da divisão (resto da divisão de inteiros)');  										
-// 	    	//assert.strictEqual(actual, expected, message);
-// 	    })
+	    it('.strictEqual()', function () {
+	    	assert.strictEqual(7232, parser.evaluateStringExpr("7232 % 34232"), 'Esperado valor 7232 da resto da divisão (resto da divisão de inteiros)');  										
+	    })
 
-// 	    it('.typeOf()', function (){
-// 	    	assert.typeOf( parser.evaluateStringExpr("7232 % 34232"), 'number', 'Esperado number da resto da divisão (resto da divisão de inteiros)');	
-// 	    })
+	    it('.typeOf()', function (){
+	    	assert.typeOf( parser.evaluateStringExpr("7232 % 34232"), 'number', 'Esperado number da resto da divisão (resto da divisão de inteiros)');	
+	    })
 
-//     	it('.throw()', function (){
-//     		assert.throws(function() {return parser.evaluateStringExpr("2933 % 3231.32"); },'Símbolos incompatíveis (resto da divisão de inteiro com real)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("2432.332 % 938242.23"); },'Símbolos incompatíveis (resto da divisão de reais)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("89723 % TRUE"); },'Símbolos incompatíveis (resto da divisão de inteiro com lógico)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("5293 % \"ಠಡ嬛ၧkd\""); },'Símbolos incompatíveis (resto da divisão de inteiro com texto)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("'c' % 3292"); },'Símbolos incompatíveis (resto da divisão de caracter com inteiro)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("3229.4209 % TRUE"); },'Símbolos incompatíveis (resto da divisão de real com lógico)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("32879.90 % \"t柹鵛瞣éट\""); },'Símbolos incompatíveis (resto da divisão de real com texto)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("3322.34029 % '吃'"); },'Símbolos incompatíveis (resto da divisão de real com caracter)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("TRUE % FALSE"); },'Símbolos incompatíveis (resto da divisão de lógicos)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("TRUE % \"p02姚ń级\""); },'Símbolos incompatíveis (resto da divisão de lógico com texto)');
-//     	    assert.throws(function() {return parser.evaluateStringExpr("TRUE % 'უ'"); },'Símbolos incompatíveis (resto da divisão de lógico com caracter)');
-//     	    assert.throws(function() {return parser.evaluateStringExpr("'ಯ' % '౼'"); },'Símbolos incompatíveis (resto da divisão de caracter com caracter)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("'ᐤ' % \"t3쥯꾟3\""); },'Símbolos incompatíveis (resto da divisão de caracter com texto)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" % \"ኺ0~cᶎओ\""); },'Símbolos incompatíveis (resto da divisão de textos)');
-//     		//assert.throws(function() {return parser.evaluateStringExpr('5 % ('); },'parse error [column 5]: unmatched "()"');
-// 	    })
+    	it('.throw()', function (){
+    		assert.throws(function() {return parser.evaluateStringExpr("2933 % 3231.32"); },'Símbolos incompatíveis (resto da divisão de inteiro com real)');
+    		assert.throws(function() {return parser.evaluateStringExpr("2432.332 % 938242.23"); },'Símbolos incompatíveis (resto da divisão de reais)');
+    		
+    		assert.throws(function() {return parser.evaluateStringExpr("89723 % TRUE"); },'parse error [column 9]: Não e esperado um boolean');
+    		assert.throws(function() {return parser.evaluateStringExpr("5293 % \"ಠಡ嬛ၧkd\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("'c' % 3292"); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("3229.4209 % TRUE"); },'parse error [column 13]: Não e esperado um boolean');
+    		assert.throws(function() {return parser.evaluateStringExpr("32879.90 % \"t柹鵛瞣éट\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("3322.34029 % '吃'"); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("TRUE % FALSE"); },'parse error [column 6]: Nao e esperado um operador aritmetico');
+    		assert.throws(function() {return parser.evaluateStringExpr("TRUE % \"p02姚ń级\""); },'parse error [column 6]: Nao e esperado um operador aritmetico');
+    	    assert.throws(function() {return parser.evaluateStringExpr("TRUE % 'უ'"); },'parse error [column 6]: Nao e esperado um operador aritmetico');
+    	    assert.throws(function() {return parser.evaluateStringExpr("'ಯ' % '౼'"); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("'ᐤ' % \"t3쥯꾟3\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" % \"ኺ0~cᶎओ\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+	    })
 
-// 	})
+	})
 
-// 	describe(' expect ', function (){
-//   		it('.equal()', function (){
-// 	    	expect(parser.evaluateStringExpr("7232 % 34232"), 'Esperado valor 7232 da resto da divisão (resto da divisão de inteiros)').to.equal(7232);
-// 	    })
+	describe(' expect ', function (){
+  		it('.equal()', function (){
+	    	expect(parser.evaluateStringExpr("7232 % 34232"), 'Esperado valor 7232 da resto da divisão (resto da divisão de inteiros)').to.equal(7232);
+	    })
 
-//   		it('.typeOf()', function (){
-//   			expect(parser.evaluateStringExpr("7232 % 34232")).to.be.a('number');
-//   		})
+  		it('.typeOf()', function (){
+  			expect(parser.evaluateStringExpr("7232 % 34232")).to.be.a('number');
+  		})
 
-//   		it('.throw()', function (){
-//   			expect(function() {return parser.evaluateStringExpr("2933 % 3231.32"); }).to.throw('Símbolos incompatíveis (resto da divisão de inteiro com real)');
-//   			expect(function() {return parser.evaluateStringExpr("2432.332 % 938242.23"); }).to.throw('Símbolos incompatíveis (resto da divisão de reais)');
-//   			expect(function() {return parser.evaluateStringExpr("89723 % TRUE"); }).to.throw('Símbolos incompatíveis (resto da divisão de inteiro com lógico)');
-//   			expect(function() {return parser.evaluateStringExpr("5293 % \"ಠಡ嬛ၧkd\""); }).to.throw('Símbolos incompatíveis (resto da divisão de inteiro com texto)');	
-//   			expect(function() {return parser.evaluateStringExpr("'c' % 3292"); }).to.throw('Símbolos incompatíveis (resto da divisão de caracter com inteiro)');
-//   			expect(function() {return parser.evaluateStringExpr("3229.4209 % TRUE"); }).to.throw('Símbolos incompatíveis (resto da divisão de real com lógico)');
-//   			expect(function() {return parser.evaluateStringExpr("32879.90 % \"t柹鵛瞣éट\""); }).to.throw('Símbolos incompatíveis (resto da divisão de real com texto)');
-//   			expect(function() {return parser.evaluateStringExpr("3322.34029 % '吃'"); }).to.throw('Símbolos incompatíveis (resto da divisão de real com caracter)');
-//   			expect(function() {return parser.evaluateStringExpr("TRUE % FALSE"); }).to.throw('Símbolos incompatíveis (resto da divisão de lógicos)');
-//   			expect(function() {return parser.evaluateStringExpr("TRUE % \"p02姚ń级\""); }).to.throw('Símbolos incompatíveis (resto da divisão de lógico com texto)');
-// 			expect(function() {return parser.evaluateStringExpr("TRUE % 'უ'"); }).to.throw('Símbolos incompatíveis (resto da divisão de lógico com caracter)');
-// 			expect(function() {return parser.evaluateStringExpr("'ಯ' % '౼'"); }).to.throw('Símbolos incompatíveis (resto da divisão de caracter com caracter)');  			
-// 			expect(function() {return parser.evaluateStringExpr("'ᐤ' % \"t3쥯꾟3\""); }).to.throw('Símbolos incompatíveis (resto da divisão de caracter com texto)');
-// 			expect(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" % \"ኺ0~cᶎओ\""); }).to.throw('Símbolos incompatíveis (resto da divisão de textos)');
-//     		//expect(function() {return parser.evaluateStringExpr('5 % ('); }).to.throw();    		
-//   		})
-// 	})
+  		it('.throw()', function (){
+  			expect(function() {return parser.evaluateStringExpr("2933 % 3231.32"); }).to.throw('Símbolos incompatíveis (resto da divisão de inteiro com real)');
+  			expect(function() {return parser.evaluateStringExpr("2432.332 % 938242.23"); }).to.throw('Símbolos incompatíveis (resto da divisão de reais)');
 
-// 	describe(' should ', function (){
-// 		 it('.equal()', function (){
-// 		 	parser.evaluateStringExpr("7232 % 34232").should.equal(7232, 'Esperado valor 7232 da resto da divisão (resto da divisão de inteiros)');
-// 	    })
+  			expect(function() {return parser.evaluateStringExpr("89723 % TRUE"); }).to.throw('parse error [column 9]: Não e esperado um boolean');
+  			expect(function() {return parser.evaluateStringExpr("5293 % \"ಠಡ嬛ၧkd\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');	
+  			expect(function() {return parser.evaluateStringExpr("'c' % 3292"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  			expect(function() {return parser.evaluateStringExpr("3229.4209 % TRUE"); }).to.throw('parse error [column 13]: Não e esperado um boolean');
+  			expect(function() {return parser.evaluateStringExpr("32879.90 % \"t柹鵛瞣éट\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  			expect(function() {return parser.evaluateStringExpr("3322.34029 % '吃'"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  			expect(function() {return parser.evaluateStringExpr("TRUE % FALSE"); }).to.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+  			expect(function() {return parser.evaluateStringExpr("TRUE % \"p02姚ń级\""); }).to.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			expect(function() {return parser.evaluateStringExpr("TRUE % 'უ'"); }).to.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			expect(function() {return parser.evaluateStringExpr("'ಯ' % '౼'"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');  			
+			expect(function() {return parser.evaluateStringExpr("'ᐤ' % \"t3쥯꾟3\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			expect(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" % \"ኺ0~cᶎओ\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis'); 	
+  		})
+	})
 
-// 		it('.typeOf()', function (){	
-// 			(parser.evaluateStringExpr("7232 % 34232")).should.be.a('number');
-// 		})
+	describe(' should ', function (){
+		 it('.equal()', function (){
+		 	parser.evaluateStringExpr("7232 % 34232").should.equal(7232, 'Esperado valor 7232 da resto da divisão (resto da divisão de inteiros)');
+	    })
 
-// 		it('.throw()', function (){	
-// 			(function() {return parser.evaluateStringExpr("2933 % 3231.32"); }).should.throw('Símbolos incompatíveis (resto da divisão de inteiro com real)');
-// 			(function() {return parser.evaluateStringExpr("2432.332 % 938242.23"); }).should.throw('Símbolos incompatíveis (resto da divisão de reais)');
-// 			(function() {return parser.evaluateStringExpr("89723 % TRUE"); }).should.throw('Símbolos incompatíveis (resto da divisão de inteiro com lógico)');	
-// 			(function() {return parser.evaluateStringExpr("5293 % \"ಠಡ嬛ၧkd\""); }).should.throw('Símbolos incompatíveis (resto da divisão de inteiro com texto)');
-// 			(function() {return parser.evaluateStringExpr("'c' % 3292"); }).should.throw('Símbolos incompatíveis (resto da divisão de caracter com inteiro)');	
-// 			(function() {return parser.evaluateStringExpr("3229.4209 % TRUE"); }).should.throw('Símbolos incompatíveis (resto da divisão de real com lógico)');
-// 			(function() {return parser.evaluateStringExpr("32879.90 % \"t柹鵛瞣éट\""); }).should.throw('Símbolos incompatíveis (resto da divisão de real com texto)');
-// 			(function() {return parser.evaluateStringExpr("3322.34029 % '吃'"); }).should.throw('Símbolos incompatíveis (resto da divisão de real com caracter)');
-// 			(function() {return parser.evaluateStringExpr("TRUE % FALSE"); }).should.throw('Símbolos incompatíveis (resto da divisão de lógicos)');
-// 			(function() {return parser.evaluateStringExpr("TRUE % \"p02姚ń级\""); }).should.throw('Símbolos incompatíveis (resto da divisão de lógico com texto)');
-// 			(function() {return parser.evaluateStringExpr("TRUE % 'უ'"); }).should.throw('Símbolos incompatíveis (resto da divisão de lógico com caracter)');
-// 			(function() {return parser.evaluateStringExpr("'ಯ' % '౼'"); }).should.throw('Símbolos incompatíveis (resto da divisão de caracter com caracter)');
-// 			(function() {return parser.evaluateStringExpr("'ᐤ' % \"t3쥯꾟3\""); }).should.throw('Símbolos incompatíveis (resto da divisão de caracter com texto)');
-// 			(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" % \"ኺ0~cᶎओ\""); }).should.throw('Símbolos incompatíveis (resto da divisão de textos)');
-// 			//(function() {return parser.evaluateStringExpr('5 * ('); }).should.throw();
-// 			//erro(function() {(parser.evaluateStringExpr('5 * (').should.throw('parse error [column 5]: unmatched "()"');}, 'Esperado');	
-// 		})
+		it('.typeOf()', function (){	
+			(parser.evaluateStringExpr("7232 % 34232")).should.be.a('number');
+		})
 
-// 	})
+		it('.throw()', function (){	
+			(function() {return parser.evaluateStringExpr("2933 % 3231.32"); }).should.throw('Símbolos incompatíveis (resto da divisão de inteiro com real)');
+			(function() {return parser.evaluateStringExpr("2432.332 % 938242.23"); }).should.throw('Símbolos incompatíveis (resto da divisão de reais)');
 
-// })
+			(function() {return parser.evaluateStringExpr("89723 % TRUE"); }).should.throw('parse error [column 9]: Não e esperado um boolean');	
+			(function() {return parser.evaluateStringExpr("5293 % \"ಠಡ嬛ၧkd\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("'c' % 3292"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');	
+			(function() {return parser.evaluateStringExpr("3229.4209 % TRUE"); }).should.throw('parse error [column 13]: Não e esperado um boolean');
+			(function() {return parser.evaluateStringExpr("32879.90 % \"t柹鵛瞣éट\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("3322.34029 % '吃'"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("TRUE % FALSE"); }).should.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			(function() {return parser.evaluateStringExpr("TRUE % \"p02姚ń级\""); }).should.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			(function() {return parser.evaluateStringExpr("TRUE % 'უ'"); }).should.throw('parse error [column 6]: Nao e esperado um operador aritmetico');
+			(function() {return parser.evaluateStringExpr("'ಯ' % '౼'"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("'ᐤ' % \"t3쥯꾟3\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" % \"ኺ0~cᶎओ\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');	
+		})
 
+	})
 
-// /*describe(' Potenciação (&&) ', function (){
-// 	describe(' assert ', function (){
+})
 
-// 	    it('.strictEqual()', function () {
-// 	    	assert.strictEqual(256, parser.evaluateStringExpr("2&&8"), 'Esperado valor 256 da potenciação (potenciação de inteiros)');
-// 	    	assert.strictEqual(0.9062229370283311, parser.evaluateStringExpr("293 && 323.32"), 'Esperado valor 0.9062229370283311 da potenciação (potenciação de inteiro com real)');
-// 	    	assert.strictEqual(0.025997904613609214, parser.evaluateStringExpr("243.92332 && 9382.4223"), 'Esperado valor 0.025997904613609214 da potenciação (potenciação de reais)');
-// 	    	//assert.strictEqual(actual, expected, message);
-// 	    })
+describe(' Potenciação (**) ', function (){
+	describe(' assert ', function (){
 
-// 	    it('.typeOf()', function (){
-// 	    	assert.typeOf( parser.evaluateStringExpr("732 && 342"), 'number', 'Esperado number da potenciação (potenciação de inteiros)');
-// 	    	assert.typeOf( parser.evaluateStringExpr("293 && 323.32"), 'number', 'Esperado number da potenciação (potenciação de inteiro com real)');
-// 	    	assert.typeOf( parser.evaluateStringExpr("243.92332 && 9382.4223"), 'number' ,'Esperado number da potenciação (potenciação de reais)');  	
-// 	    })
-//     	//    		235&&87 erro?
-//     	it('.throw()', function (){
-//     		2358&&877 erro
-//     		assert.throws(function() {return parser.evaluateStringExpr("89723 && TRUE"); },'Símbolos incompatíveis (potenciação de inteiro com lógico)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("5293 && \"ಠಡ嬛ၧkd\""); },'Símbolos incompatíveis (potenciação de inteiro com texto)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("'c' && 3292"); },'Símbolos incompatíveis (potenciação de caracter com inteiro)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("3229.4209 && TRUE"); },'Símbolos incompatíveis (potenciação de real com lógico)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("32879.90 && \"t柹鵛瞣éट\""); },'Símbolos incompatíveis (potenciação de real com texto)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("3322.34029 && '吃'"); },'Símbolos incompatíveis (potenciação de real com caracter)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("TRUE && FALSE"); },'Símbolos incompatíveis (potenciação de lógicos)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("TRUE && \"p02姚ń级\""); },'Símbolos incompatíveis (potenciação de lógico com texto)');
-//     	    assert.throws(function() {return parser.evaluateStringExpr("TRUE && 'უ'"); },'Símbolos incompatíveis (potenciação de lógico com caracter)');
-//     	    assert.throws(function() {return parser.evaluateStringExpr("'ಯ' && '౼'"); },'Símbolos incompatíveis (potenciação de caracter com caracter)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("'ᐤ' && \"t3쥯꾟3\""); },'Símbolos incompatíveis (potenciação de caracter com texto)');
-//     		assert.throws(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" && \"ኺ0~cᶎओ\""); },'Símbolos incompatíveis (potenciação de textos)');
-//     		//assert.throws(function() {return parser.evaluateStringExpr('5 && ('); },'parse error [column 5]: unmatched "()"');
-// 	    })
+	    it('.strictEqual()', function () {
+	    	assert.strictEqual(256, parser.evaluateStringExpr("2**8"), 'Esperado valor 256 da potenciação (potenciação de inteiros)');
+	    	assert.strictEqual(Infinity, parser.evaluateStringExpr("293 ** 323.32"), 'Esperado Infinity da potenciação (potenciação de inteiro com real)');
+	    	assert.strictEqual(Infinity, parser.evaluateStringExpr("243.92332 ** 9382.4223"), 'Esperado Infinity da potenciação (potenciação de reais)');
+	    })
 
-// 	})
+	    it('.typeOf()', function (){
+	    	assert.typeOf( parser.evaluateStringExpr("732 ** 342"), 'number', 'Esperado number da potenciação (potenciação de inteiros)');
+	    	assert.typeOf( parser.evaluateStringExpr("293 ** 323.32"), 'number', 'Esperado number da potenciação (potenciação de inteiro com real)');
+	    	assert.typeOf( parser.evaluateStringExpr("243.92332 ** 9382.4223"), 'number' ,'Esperado number da potenciação (potenciação de reais)');  	
+	    })
 
-// 	describe(' expect ', function (){
-//   		it('.equal()', function (){
-// 	    	expect(parser.evaluateStringExpr("732 && 342"), 'Esperado valor 2 da potenciação (potenciação de inteiros)').to.equal(2);
-// 	    	expect(parser.evaluateStringExpr("293 && 323.32"), 'Esperado valor 0.9062229370283311 da potenciação (potenciação de inteiro com real)').to.equal(0.9062229370283311);;
-// 	    	expect(parser.evaluateStringExpr("243.92332 && 9382.4223"), 'Esperado valor 0.025997904613609214 da potenciação (potenciação de reais)').to.equal(0.025997904613609214);
-// 	    })
+    	it('.throw()', function (){
+    		assert.throws(function() {return parser.evaluateStringExpr("89723 ** TRUE"); },'parse error [column 10]: Não e esperado um boolean');
+    		assert.throws(function() {return parser.evaluateStringExpr("5293 ** \"ಠಡ嬛ၧkd\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("'c' ** 3292"); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("3229.4209 ** TRUE"); },'parse error [column 14]: Não e esperado um boolean');
+    		assert.throws(function() {return parser.evaluateStringExpr("32879.90 ** \"t柹鵛瞣éट\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("3322.34029 ** '吃'"); },'EVALUATOR ERROR:Operacao entre tipos incompativei');
+    		assert.throws(function() {return parser.evaluateStringExpr("TRUE ** FALSE"); },'parse error [column 7]: Nao e esperado um operador aritmetico');
+    		assert.throws(function() {return parser.evaluateStringExpr("TRUE ** \"p02姚ń级\""); },'parse error [column 7]: Nao e esperado um operador aritmetico');
+    	    assert.throws(function() {return parser.evaluateStringExpr("TRUE ** 'უ'"); },'parse error [column 7]: Nao e esperado um operador aritmetico');
+    	    assert.throws(function() {return parser.evaluateStringExpr("'ಯ' ** '౼'"); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("'ᐤ' ** \"t3쥯꾟3\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+    		assert.throws(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" ** \"ኺ0~cᶎओ\""); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+	    })
 
-//   		it('.typeOf()', function (){
-//   			expect(parser.evaluateStringExpr("732 && 342")).to.be.a('number');
-//   			expect(parser.evaluateStringExpr("293 && 323.32")).to.be.a('number');
-//   			expect(parser.evaluateStringExpr("243.92332 && 9382.4223")).to.be.a('number');		
-//   		})
+	})
 
-//   		it('.throw()', function (){
-//   			expect(function() {return parser.evaluateStringExpr("89723 && TRUE"); }).to.throw('Símbolos incompatíveis (potenciação de inteiro com lógico)');
-//   			expect(function() {return parser.evaluateStringExpr("5293 && \"ಠಡ嬛ၧkd\""); }).to.throw('Símbolos incompatíveis (potenciação de inteiro com texto)');	
-//   			expect(function() {return parser.evaluateStringExpr("'c' && 3292"); }).to.throw('Símbolos incompatíveis (potenciação de caracter com inteiro)');
-//   			expect(function() {return parser.evaluateStringExpr("3229.4209 && TRUE"); }).to.throw('Símbolos incompatíveis (potenciação de real com lógico)');
-//   			expect(function() {return parser.evaluateStringExpr("32879.90 && \"t柹鵛瞣éट\""); }).to.throw('Símbolos incompatíveis (potenciação de real com texto)');
-//   			expect(function() {return parser.evaluateStringExpr("3322.34029 && '吃'"); }).to.throw('Símbolos incompatíveis (potenciação de real com caracter)');
-//   			expect(function() {return parser.evaluateStringExpr("TRUE && FALSE"); }).to.throw('Símbolos incompatíveis (potenciação de lógicos)');
-//   			expect(function() {return parser.evaluateStringExpr("TRUE && \"p02姚ń级\""); }).to.throw('Símbolos incompatíveis (potenciação de lógico com texto)');
-// 			expect(function() {return parser.evaluateStringExpr("TRUE && 'უ'"); }).to.throw('Símbolos incompatíveis (potenciação de lógico com caracter)');
-// 			expect(function() {return parser.evaluateStringExpr("'ಯ' && '౼'"); }).to.throw('Símbolos incompatíveis (potenciação de caracter com caracter)');  			
-// 			expect(function() {return parser.evaluateStringExpr("'ᐤ' && \"t3쥯꾟3\""); }).to.throw('Símbolos incompatíveis (potenciação de caracter com texto)');
-// 			expect(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" && \"ኺ0~cᶎओ\""); }).to.throw('Símbolos incompatíveis (potenciação de textos)');
-//     		//expect(function() {return parser.evaluateStringExpr('5 && ('); }).to.throw();    		
-//   		})
-// 	})
+	describe(' expect ', function (){
+  		it('.equal()', function (){
+	    	expect(parser.evaluateStringExpr("2**8"), 'Esperado valor 256 da potenciação (potenciação de inteiros)').to.equal(256);
+	    	expect(parser.evaluateStringExpr("293 ** 323.32"), 'Esperado Infinity da potenciação (potenciação de inteiro com real)').to.equal(Infinity);;
+	    	expect(parser.evaluateStringExpr("243.92332 ** 9382.4223"), 'Esperado Infinity da potenciação (potenciação de reais)').to.equal(Infinity);
+	    })
 
-// 	describe(' should ', function (){
-// 		 it('.equal()', function (){
-// 		 	parser.evaluateStringExpr("732 && 342").should.equal(2, 'Esperado valor 2 da potenciação (potenciação de inteiros)');
-// 		 	parser.evaluateStringExpr("293 && 323.32").should.equal(0.9062229370283311, 'Esperado valor 0.9062229370283311 da potenciação (potenciação de inteiro com real)');
-// 		 	parser.evaluateStringExpr("243.92332 && 9382.4223").should.equal(583.9209669999999, 'Esperado valor 583.9209669999999 da potenciação (potenciação de reais)');
-// 	    })
+  		it('.typeOf()', function (){
+  			expect(parser.evaluateStringExpr("2**8")).to.be.a('number');
+  			expect(parser.evaluateStringExpr("293 ** 323.32")).to.be.a('number');
+  			expect(parser.evaluateStringExpr("243.92332 ** 9382.4223")).to.be.a('number');		
+  		})
 
-// 		it('.typeOf()', function (){	
-// 			(parser.evaluateStringExpr("732 && 342")).should.be.a('number');
-// 			(parser.evaluateStringExpr("293 && 323.32")).should.be.a('number');
-// 			(parser.evaluateStringExpr("243.92332 && 9382.4223")).should.be.a('number');
-// 		})
+  		it('.throw()', function (){
+  			expect(function() {return parser.evaluateStringExpr("89723 ** TRUE"); }).to.throw('parse error [column 10]: Não e esperado um boolean');
+  			expect(function() {return parser.evaluateStringExpr("5293 ** \"ಠಡ嬛ၧkd\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');	
+  			expect(function() {return parser.evaluateStringExpr("'c' ** 3292"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  			expect(function() {return parser.evaluateStringExpr("3229.4209 ** TRUE"); }).to.throw('parse error [column 14]: Não e esperado um boolean');
+  			expect(function() {return parser.evaluateStringExpr("32879.90 ** \"t柹鵛瞣éट\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  			expect(function() {return parser.evaluateStringExpr("3322.34029 ** '吃'"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  			expect(function() {return parser.evaluateStringExpr("TRUE ** FALSE"); }).to.throw('parse error [column 7]: Nao e esperado um operador aritmetico');
+  			expect(function() {return parser.evaluateStringExpr("TRUE ** \"p02姚ń级\""); }).to.throw('parse error [column 7]: Nao e esperado um operador aritmetico');
+			expect(function() {return parser.evaluateStringExpr("TRUE ** 'უ'"); }).to.throw('parse error [column 7]: Nao e esperado um operador aritmetico');
+			expect(function() {return parser.evaluateStringExpr("'ಯ' ** '౼'"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');  			
+			expect(function() {return parser.evaluateStringExpr("'ᐤ' ** \"t3쥯꾟3\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			expect(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" ** \"ኺ0~cᶎओ\""); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis'); 		
+  		})
+	})
 
-// 		it('.throw()', function (){	
-// 			(function() {return parser.evaluateStringExpr("89723 && TRUE"); }).should.throw('Símbolos incompatíveis (potenciação de inteiro com lógico)');	
-// 			(function() {return parser.evaluateStringExpr("5293 && \"ಠಡ嬛ၧkd\""); }).should.throw('Símbolos incompatíveis (potenciação de inteiro com texto)');
-// 			(function() {return parser.evaluateStringExpr("'c' && 3292"); }).should.throw('Símbolos incompatíveis (potenciação de caracter com inteiro)');	
-// 			(function() {return parser.evaluateStringExpr("3229.4209 && TRUE"); }).should.throw('Símbolos incompatíveis (potenciação de real com lógico)');
-// 			(function() {return parser.evaluateStringExpr("32879.90 && \"t柹鵛瞣éट\""); }).should.throw('Símbolos incompatíveis (potenciação de real com texto)');
-// 			(function() {return parser.evaluateStringExpr("3322.34029 && '吃'"); }).should.throw('Símbolos incompatíveis (potenciação de real com caracter)');
-// 			(function() {return parser.evaluateStringExpr("TRUE && FALSE"); }).should.throw('Símbolos incompatíveis (potenciação de lógicos)');
-// 			(function() {return parser.evaluateStringExpr("TRUE && \"p02姚ń级\""); }).should.throw('Símbolos incompatíveis (potenciação de lógico com texto)');
-// 			(function() {return parser.evaluateStringExpr("TRUE && 'უ'"); }).should.throw('Símbolos incompatíveis (potenciação de lógico com caracter)');
-// 			(function() {return parser.evaluateStringExpr("'ಯ' && '౼'"); }).should.throw('Símbolos incompatíveis (potenciação de caracter com caracter)');
-// 			(function() {return parser.evaluateStringExpr("'ᐤ' && \"t3쥯꾟3\""); }).should.throw('Símbolos incompatíveis (potenciação de caracter com texto)');
-// 			(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" && \"ኺ0~cᶎओ\""); }).should.throw('Símbolos incompatíveis (potenciação de textos)');
-// 			//(function() {return parser.evaluateStringExpr('5 * ('); }).should.throw();
-// 			//erro(function() {(parser.evaluateStringExpr('5 * (').should.throw('parse error [column 5]: unmatched "()"');}, 'Esperado');	
-// 		})
+	describe(' should ', function (){
+		 it('.equal()', function (){
+		 	parser.evaluateStringExpr("2**8").should.equal(256, 'Esperado valor 256 da potenciação (potenciação de inteiros)');
+		 	parser.evaluateStringExpr("293 ** 323.32").should.equal(Infinity, 'Esperado Infinity da potenciação (potenciação de inteiro com real)');
+		 	parser.evaluateStringExpr("243.92332 ** 9382.4223").should.equal(Infinity, 'Esperado Infinity da potenciação (potenciação de reais)');
+	    })
 
-// 	})
+		it('.typeOf()', function (){	
+			(parser.evaluateStringExpr("2 ** 8")).should.be.a('number');
+			(parser.evaluateStringExpr("293 ** 323.32")).should.be.a('number');
+			(parser.evaluateStringExpr("243.92332 ** 9382.4223")).should.be.a('number');
+		})
 
-// })*/
+		it('.throw()', function (){	
+			(function() {return parser.evaluateStringExpr("89723 ** TRUE"); }).should.throw('parse error [column 10]: Não e esperado um boolean');	
+			(function() {return parser.evaluateStringExpr("5293 ** \"ಠಡ嬛ၧkd\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("'c' ** 3292"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');	
+			(function() {return parser.evaluateStringExpr("3229.4209 ** TRUE"); }).should.throw('parse error [column 14]: Não e esperado um boolean');
+			(function() {return parser.evaluateStringExpr("32879.90 ** \"t柹鵛瞣éट\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("3322.34029 ** '吃'"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("TRUE ** FALSE"); }).should.throw('parse error [column 7]: Nao e esperado um operador aritmetico');
+			(function() {return parser.evaluateStringExpr("TRUE ** \"p02姚ń级\""); }).should.throw('parse error [column 7]: Nao e esperado um operador aritmetico');
+			(function() {return parser.evaluateStringExpr("TRUE ** 'უ'"); }).should.throw('parse error [column 7]: Nao e esperado um operador aritmetico');
+			(function() {return parser.evaluateStringExpr("'ಯ' ** '౼'"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("'ᐤ' ** \"t3쥯꾟3\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+			(function() {return parser.evaluateStringExpr("\"t3嵊୴s犏t\" ** \"ኺ0~cᶎओ\""); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+
+		})
+ 	})
+})
+
 
 // describe(' Operador Lógico && (&&) ', function (){
 // 	describe(' assert ', function (){
@@ -1484,20 +1471,65 @@ describe(' Multiplicação (*) ', function (){
 // })
 
 
- 
-// describe(' Multiplos sinais ', function(){
-// 	describe(' assert ', function(){
-// 		it(' .strictEqual() ', function(){
-// 			assert.strictEqual();
-// 		})
+describe(' Multiplos sinais ', function (){
+	describe(' assert ', function (){
 
-// 		it(' .typeOf() ', function(){
+	    it('.strictEqual()', function () {
+	    	assert.strictEqual(7, parser.evaluateStringExpr("1-3*2-6+4+2*7"), 'Esperado valor 7');
+	    	assert.strictEqual(620.0129452507275, parser.evaluateStringExpr("1145.1+sin(20)-263*2-8/4%2"), 'Esperado valor 620.0129452507275');
+	    	//23!+2-50*10/2+10-5! resultado = 2.585201673888498e+22 ? -136
+	    	assert.strictEqual(true, parser.evaluateStringExpr("2>0 || 2>5 && 2>7"), 'Esperado true');  										
+	    	
+	    })
 
-// 		})
+	    it('.typeOf()', function (){
+	    	assert.typeOf( parser.evaluateStringExpr("1-3*2-6+4+2*7"), 'number', 'Esperado number da resto da operação');
+	    	assert.typeOf( parser.evaluateStringExpr("1145.1+sin(20)-263*2-8/4%2"), 'number', 'Esperado number da resto da operação');
+	    	assert.typeOf( parser.evaluateStringExpr("2>0 || 2>5 && 2>7"), 'boolean', 'Esperado boolean da resto da operação');	
+	    })
 
-// 		it(' throw() ', function(){
+    	it('.throw()', function (){
+    		assert.throws(function() {return parser.evaluateStringExpr("2<0 && 2<5 || 7>7 == 56 != 7 && 7 != 6 / 10 % 6"); },'EVALUATOR ERROR:Operacao entre tipos incompativeis');
+	    })
 
-// 		})
+	 })
 
-// 		})
-// })
+	describe(' expect ', function (){
+  		it('.equal()', function (){
+	    	expect(parser.evaluateStringExpr("1-3*2-6+4+2*7"), 'Esperado valor 7').to.equal(7);
+	    	expect(parser.evaluateStringExpr("1145.1+sin(20)-263*2-8/4%2"), 'Esperado valor 620.0129452507275').to.equal(620.0129452507275);
+	    	expect(parser.evaluateStringExpr("2>0 || 2>5 && 2>7"), 'Esperado true').to.equal(true);
+	    })
+
+  		it('.typeOf()', function (){
+  			expect(parser.evaluateStringExpr("1-3*2-6+4+2*7")).to.be.a('number');
+  			expect(parser.evaluateStringExpr("1145.1+sin(20)-263*2-8/4%2")).to.be.a('number');
+  			expect(parser.evaluateStringExpr("2>0 || 2>5 && 2>7")).to.be.a('boolean');
+  		})
+
+  		it('.throw()', function (){
+			expect(function() {return parser.evaluateStringExpr("2<0 && 2<5 || 7>7 == 56 != 7 && 7 != 6 / 10 % 6"); }).to.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');
+  		})
+	})
+
+	describe(' should ', function (){
+		 it('.equal()', function (){
+		 	parser.evaluateStringExpr("1-3*2-6+4+2*7").should.equal(7, 'Esperado valor 7');
+		 	parser.evaluateStringExpr("1145.1+sin(20)-263*2-8/4%2").should.equal(620.0129452507275, 'Esperado valor 620.0129452507275');
+		 	parser.evaluateStringExpr("2>0 || 2>5 && 2>7").should.equal(true, 'Esperado true');
+	    })
+
+		it('.typeOf()', function (){	
+			(parser.evaluateStringExpr("1-3*2-6+4+2*7")).should.be.a('number');
+			(parser.evaluateStringExpr("1145.1+sin(20)-263*2-8/4%2")).should.be.a('number');
+			(parser.evaluateStringExpr("2>0 || 2>5 && 2>7")).should.be.a('boolean');
+		})
+
+		it('.throw()', function (){	
+			(function() {return parser.evaluateStringExpr("2<0 && 2<5 || 7>7 == 56 != 7 && 7 != 6 / 10 % 6"); }).should.throw('EVALUATOR ERROR:Operacao entre tipos incompativeis');	
+
+		})
+
+	})
+
+})
