@@ -6,7 +6,7 @@
     "prompt": "*",
     "socket.io": "*",
     "ecstatic": "*",
-    //"core-parser": "git://github.com/portugol/core-parser.git"
-  	"core-parser" : "*"
+  	"core-parser": "git://github.com/portugol/core-parser.git",
+  	"clone": "*"
   }
 }
