@@ -8,11 +8,11 @@
 var Expression = require('./expression');
 var Token = require('./token');
 var tokenTypes= require('./definitions/token_types');
-var comp=require('./compatibility/binary_comp').binComp;
-var binops=require('./definitions/binary_operators').binops;
+var comp=require('./compatibility/binary_comp');
+var binops=require('./definitions/binary_operators');
 var operandCodes=require('./compatibility/vartype_codes');
 var Evaluator = require('./evaluator');
-var unaryLeftComp=require('./compatibility/unary_left_comp').unaryLeftComp;
+var unaryLeftComp=require('./compatibility/unary_left_comp');
 
 //Biblioteca de asserts
 var chai = require("./chai");
