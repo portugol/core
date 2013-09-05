@@ -6,6 +6,15 @@
     "prompt": "*",
     "socket.io": "*",
     "ecstatic": "*",
-    "core-parser": "git://github.com/portugol/core-parser.git"
+
+    "i18next": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*"
+  },
+  "scripts": {
+    "test": "mocha --ui exports --reporter list"
   }
 }
+
